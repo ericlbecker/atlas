@@ -18,6 +18,7 @@
   --heat0:#e8eef7; --heat1:#a9c6e8; --heat2:#5d93cf; --heat3:#2f66ad; --heat4:#17407d;
   --rep1:#f3d08a; --rep2:#e8a33d; --rep3:#d1691a; --rep4:#a83008;
   --corr:#8e44ad; --track:#9aa0b4; --map-bg:#e7e4d8; --map-land:#f3f1e8; --map-line:#c9c6b6;
+  --t-bus:#2a78d6; --t-ride:#eb6834; --t-micro:#1baf7a; --dev-t:#2a78d6; --dev-c:#eb6834;
   --shadow:0 1px 3px rgba(20,22,30,.08),0 8px 24px rgba(20,22,30,.06);
   --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
   --sans:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
@@ -31,6 +32,7 @@
   --heat0:#15233a; --heat1:#1d3f68; --heat2:#2f66ad; --heat3:#5a93d8; --heat4:#9cc3f0;
   --rep1:#6b4a1b; --rep2:#b9792a; --rep3:#e39a3f; --rep4:#f6c47a;
   --corr:#b07cd8; --track:#4a5168; --map-bg:#0a0c12; --map-land:#121724; --map-line:#2a3146;
+  --t-bus:#3987e5; --t-ride:#d95926; --t-micro:#199e70; --dev-t:#3987e5; --dev-c:#d95926;
   --shadow:0 1px 3px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.4); color-scheme:dark;
 }}
 :root[data-theme="dark"]{
@@ -41,9 +43,11 @@
   --heat0:#15233a; --heat1:#1d3f68; --heat2:#2f66ad; --heat3:#5a93d8; --heat4:#9cc3f0;
   --rep1:#6b4a1b; --rep2:#b9792a; --rep3:#e39a3f; --rep4:#f6c47a;
   --corr:#b07cd8; --track:#4a5168; --map-bg:#0a0c12; --map-land:#121724; --map-line:#2a3146;
+  --t-bus:#3987e5; --t-ride:#d95926; --t-micro:#199e70; --dev-t:#3987e5; --dev-c:#d95926;
   --shadow:0 1px 3px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.4); color-scheme:dark;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased}
 h1,h2,h3{font-family:var(--disp);text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.01em}
 a{color:var(--accent-ink)}
@@ -766,12 +770,15 @@ h3.sh{font-size:16px;margin:26px 0 12px;padding-bottom:7px;border-bottom:1px sol
 .layerbox summary::-webkit-details-marker{display:none}
 .layerbox summary::before{content:"\25B8";color:var(--ink3);font-size:10px;transition:transform .15s}
 .layerbox[open] summary::before{transform:rotate(90deg)}
-.lyrs{padding:4px 11px 11px;display:flex;flex-direction:column;gap:3px;max-height:48vh;overflow:auto}
+.lyrs{padding:4px 11px 11px;display:flex;flex-direction:column;gap:3px;max-height:calc(min(76vh,740px) - 150px);overflow:auto}
 .lyr{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--ink);cursor:pointer;padding:3px 2px;line-height:1.25}
 .lyr input{margin:0;flex:none;accent-color:var(--accent)}
 .sw{width:11px;height:11px;border-radius:3px;flex:none;border:1px solid rgba(128,128,128,.3)}
 .sw.dot{border-radius:50%}
 .sw.line{height:3px;border-radius:2px;width:15px}
+.sw.gl{border:0;border-radius:0;background:none!important;width:13px;height:13px;display:inline-flex}
+.sw.gl svg{width:13px;height:13px;display:block}
+.lyrhead{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:7px 2px 2px;padding-top:6px;border-top:1px solid var(--line2)}
 .scan{position:absolute;z-index:800;right:10px;top:10px;display:flex;gap:6px}
 .scan button{font-family:var(--mono);font-size:11px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 9px;cursor:pointer;box-shadow:var(--shadow)}
 .scan button:hover{border-color:var(--accent)}
@@ -846,6 +853,19 @@ figure.chart{margin:14px 0;background:var(--panel);border:1px solid var(--line);
 figure.chart figcaption{font-size:11.5px;color:var(--ink3);margin-top:6px}
 figure.chart h4{margin:0 0 2px;font-family:var(--disp);font-size:14px}
 figure.chart .sub{font-size:11.5px;color:var(--ink3);margin-bottom:10px}
+.lg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:11.5px;color:var(--ink2);margin:0 0 8px}
+.lg span{display:inline-flex;align-items:center;gap:6px}
+.lg i{width:10px;height:10px;border-radius:2px;display:inline-block;flex:none}
+.split{display:flex;gap:2px;height:16px;border-radius:4px;overflow:hidden;margin:6px 0 0}
+.split span{min-width:2px;display:block}
+.splitl{display:flex;flex-wrap:wrap;gap:3px 16px;font-size:11.5px;color:var(--ink2);margin:7px 0 14px}
+.splitl span{display:inline-flex;align-items:center;gap:6px}
+.splitl i{width:10px;height:10px;border-radius:2px;display:inline-block;flex:none}
+.splitl b{color:var(--ink);font-family:var(--mono);font-weight:600}
+.splitl em{font-style:normal;font-family:var(--mono);color:var(--ink3)}
+.splith{font-family:var(--disp);font-size:13px;font-weight:600;margin:10px 0 0;color:var(--ink)}
+.jump{display:flex;flex-wrap:wrap;gap:8px 18px;margin:12px 0 0}
+.jump a{font-family:var(--disp);font-weight:600;font-size:13px}
 .bmsel{display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--ink3);padding:2px 2px 8px;border-bottom:1px solid var(--line2);margin-bottom:6px}
 .bmsel select{font-family:var(--sans);font-size:12px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink)}
 .leaflet-control-attribution{background:color-mix(in srgb,var(--panel) 88%,transparent)!important;color:var(--ink2)!important;font-size:10px}
@@ -871,7 +891,7 @@ figure.chart .sub{font-size:11.5px;color:var(--ink3);margin-bottom:10px}
 //# sourceMappingURL=leaflet.js.map</script>
 <script>window.__PM_LOCAL=true;</script>
 <script>"use strict";
-/* Pisces Moon Signals Atlas, version 5. Runs as a published artifact (fetch) or as a local
+/* Pisces Moon Signals Atlas, version 6 (T-Deck Plus + Cardputer). Runs as a published artifact (fetch) or as a local
    file:// copy (window.__PM_LOCAL: data arrives through <script> files, OSM tiles on). */
 const LOCAL=!!window.__PM_LOCAL;
 const DATA='data/';
@@ -893,17 +913,18 @@ async function BUF(f){const t=String(await raw(f)).trim();const bin=atob(t);cons
 (function(){let t;try{t=localStorage.getItem('pm_theme')}catch(e){}if(t)document.documentElement.setAttribute('data-theme',t);
 $('#theme').onclick=()=>{const nx=isDark()?'light':'dark';
   document.documentElement.setAttribute('data-theme',nx);try{localStorage.setItem('pm_theme',nx)}catch(e){}
-  if(window.MAP)window.MAP.restyle();};})();
+  if(window.MAP&&CUR==='map')window.MAP.restyle();else route(true);};})();
 
 /* ---------- nav / routing ---------- */
-const VIEWS=[['overview','Overview'],['report','Report'],['map','Map'],['signals','Signals'],['threats','Threat search'],['esp32','ESP32'],['routes','Routes & stops'],['method','Method']];
+const VIEWS=[['overview','Overview'],['report','Report'],['map','Map'],['signals','Signals'],['transit','Transit'],['threats','Threat search'],['esp32','ESP32'],['routes','Routes & stops'],['devices','Two recorders'],['method','Method']];
+let CUR='overview';
 const nav=$('#nav');
 VIEWS.forEach(([id,label])=>{const b=el('button',null,label);b.onclick=()=>location.hash=id;b.dataset.id=id;nav.appendChild(b);});
-function route(){let h=(location.hash||'#overview').slice(1);if(!VIEWS.some(v=>v[0]===h))h='overview';
+function route(keep){let h=(location.hash||'#overview').slice(1);if(!VIEWS.some(v=>v[0]===h))h='overview';CUR=h;const y=keep===true?window.scrollY:0;
   nav.querySelectorAll('button').forEach(b=>b.setAttribute('aria-current',b.dataset.id===h));
   render(h).catch(err=>{stage.innerHTML='';stage.append(el('section',null,'<p class="lead">This view could not load its data ('+String(err.message||err)+'). Reload the page to try again.</p>'));});
-  window.scrollTo(0,0);}
-addEventListener('hashchange',route);
+  window.scrollTo(0,y);}
+addEventListener('hashchange',()=>route());
 
 /* ---------- small chart + table helpers ---------- */
 function barList(host,rows){
@@ -962,6 +983,8 @@ async function render(h){stage.innerHTML='';
   if(h==='report')return viewReport();
   if(h==='map')return viewMap();
   if(h==='signals')return viewSignals();
+  if(h==='transit')return viewTransit();
+  if(h==='devices')return viewDevices();
   if(h==='threats')return viewThreats();
   if(h==='esp32')return viewEsp32();
   if(h==='routes')return viewRoutes();
@@ -969,23 +992,26 @@ async function render(h){stage.innerHTML='';
 }
 
 async function viewOverview(){
-  const [S,R,TH,E]=await Promise.all([J('summary.json'),J('report.json'),J('threats.json'),J('esp32.json')]);const T=S.totals,D=R.driving,Q=S.quality,TS=TH.summary;
+  const [S,R,TH,E,H,CP,TR,RD]=await Promise.all([J('summary.json'),J('report.json'),J('threats.json'),J('esp32.json'),J('history.json'),J('compare.json'),J('transit.json'),J('riders.json')]);const T=S.totals,D=R.driving,Q=S.quality,TS=TH.summary,BD=T.by_device;
   const sec=el('section');
   sec.append(el('div','eyebrow','All drives \u00b7 Mar 28 \u2013 Nov 15, 2026 \u00b7 California & Oregon'));
-  sec.append(el('h2','vh','Everything the T-Deck heard'));
-  sec.append(el('p','lead',T.files+' logging sessions from the T-Deck Plus, parsed and cleaned into one dataset: '+fmt(T.rows)+' observations of '+fmt(T.wifi_devices+T.ble_devices)+' distinct addresses along '+fmt(D.km)+' km of driving. Each device sits on the map at the strength-weighted center of where it was heard.'));
+  sec.append(el('h2','vh','Everything the two recorders heard'));
+  sec.append(el('p','lead',T.files+' logging sessions, '+BD.T.files+' from the T-Deck Plus and '+BD.C.files+' from the Cardputer, parsed and cleaned into one dataset: '+fmt(T.rows)+' observations of '+fmt(T.wifi_devices+T.ble_devices)+' distinct addresses along '+fmt(D.km)+' km of driving. Each device sits on the map at the strength-weighted center of where it was heard.'));
   sec.append(tiles([[fmt(T.rows),'radio observations','Wi-Fi, Bluetooth and LoRa rows after cleaning'],[fmt(T.wifi_devices),'Wi-Fi networks','unique addresses ('+fmt(T.unique_ssids)+' network names)'],
     [fmt(T.ble_devices),'Bluetooth LE addresses','plus '+fmt(T.ble_names_no_address)+' names recovered without one'],[fmt(D.days),'driving days',D.la_days+' Los Angeles \u00b7 '+D.pdx_days+' Portland, of '+D.logged_days+' days with data'],
     [fmt(D.km)+' km','driven','about '+fmt(D.unique_km)+' km of distinct road'],[fmt(E.total),'ESP32 / Espressif','other people\'s boards']]));
   const go=el('p');const a=el('a',null,'Read the full report: patterns, frequented routes, high-RF regions \u2192');a.href='#report';a.style.cssText='font-family:var(--disp);font-weight:600;font-size:14px';go.append(a);sec.append(go);
   const ch=el('div','note');
-  ch.innerHTML=`<b>This version is a full re-run from the raw files, and it corrects the earlier one.</b>
-  <ul class="clean"><li><b>${fmt(Q.recovered_no_address)} Bluetooth rows recovered.</b> An early firmware fault wrote a device's name where its address belongs. Those rows were being thrown away. Most were Teslas: the count of distinct Teslas goes from 3,584 to ${fmt(R.vehicles.teslas)}.</li>
-  <li><b>The car you drove is identified on ${R.shift.days} days, not 7:</b> a fleet Tesla, a different one on almost every shift.</li>
-  <li><b>ESP32 boards: ${fmt(E.total)}, not 2,134.</b> They are now matched against the current IEEE registry. The camera recorders and cellular routers that the old firmware tag had mislabeled are out.</li>
-  <li><b>Wi-Fi security shares were computed over the wrong totals.</b> About ${pct(R.security.wpa3_capable,R.security.detail_n)}% of networks offer WPA3, not the half a percent reported before.</li>
-  <li><b>Two more GPS faults</b> turned up when every fix was checked against transmitters that don't move.</li></ul>`;
-  const cl=el('a',null,'Every change, with before and after \u2192');cl.href='#method';cl.style.cssText='font-family:var(--disp);font-weight:600';ch.append(cl);sec.append(ch);
+  const d19=CP.by_day[0],d31=CP.by_day[CP.by_day.length-1],LW=RD.lunch_two_ways||[],L2=LW[0],AL=TR.alto,LI=TR.lime;
+  ch.innerHTML=`<b>New in this version: the Cardputer's logs, and the other vehicles on the air.</b>
+  <ul class="clean"><li><b>${BD.C.files} Cardputer sessions are in</b> (${longDate(BD.C.first)} \u2013 ${longDate(BD.C.last)}): ${fmt(BD.C.rows)} more rows, ${D.cardputer_only_drive_days.length} driving days the T-Deck missed and ${fmt(D.km-H.km)} more kilometers.</li>
+  <li><b>${R.shift.days-H.shift_days} more shifts identified, ${R.shift.days} in all.</b> The Cardputer can't read a Tesla's name, but it hears the car's address, and the T-Deck had already matched that address to a name.</li>
+  <li><b>In the same car, the two recorders hear differently.</b> The Cardputer reads the same transmitter about ${Math.round(CP.rssi.road.WIFI.diff_med)} dB stronger. It logged ${Math.round(100*(d19.wifi.c/d19.wifi.t-1))}% more Wi-Fi networks than the T-Deck on ${longDate(d19.day)} and ${Math.round(100*(d31.wifi.c/d31.wifi.t-1))}% more on ${longDate(d31.day)}, after a T-Deck update. Only the T-Deck gets Tesla names.</li>
+  <li><b>A Transit tab:</b> ${fmt(AL.cars)} Alto cars, ${fmt(LI.scooters)} Lime scooters, buses, fleet trackers and dashcams, with where each was met and which came back.</li>
+  ${L2?`<li><b>The lunch break, seen two ways${LW.length>1?' on both shared shifts':''}.</b> On ${andList(LW.map(l=>longDate(l.day)))} the T-Deck stayed in the car and heard an empty cabin for ${andList(LW.map(l=>l.cabin_min))} minutes. The Cardputer went with you: its GPS sat ${andList(LW.map(l=>l.metres+' m'))} away, among strong Bluetooth signals the T-Deck never heard.</li>`:''}
+  <li><b>Which recorder is more accurate can't be settled from the logs.</b> They agree with each other to a median ${CP.gps.med_m} m. The Two recorders tab sets out what the data can and can't say.</li></ul>`;
+  const jp=el('div','jump');[['#devices','Compare the two recorders \u2192'],['#transit','Open Transit \u2192']].forEach(([h,t])=>{const a=el('a',null,t);a.href=h;jp.append(a);});ch.append(jp);
+  const cl=el('a',null,'Every figure that changed, with before and after \u2192');cl.href='#method';cl.style.cssText='font-family:var(--disp);font-weight:600;font-size:13px';jp.append(cl);sec.append(ch);
   sec.append(el('h3','sh','What the threat search found'));
   const g=el('div','grid2');
   const mk=(cls,pill,title,body)=>{const c=el('div','finding '+cls);c.append(el('h4',null,title+' <span class="pill '+pill+'">'+({good:'clear',notable:'notable',explained:'explained'}[cls])+'</span>'));c.append(el('p',null,body));return c;};
@@ -995,22 +1021,24 @@ async function viewOverview(){
   g.append(mk('good','good','No tracker tag','No unnamed beacon stayed with the car across an hour of driving. The longest-lived one lasted '+TS.tag_longest_min+' minutes, which is one ride.'));
   g.append(mk('good','good','ESP32 boards: none hostile',fmt(E.total)+' other people\'s boards, nearly all home appliances heard in passing. None travelled with you, imitated a public network or carried an attack-tool name.'));
   g.append(mk('notable','notable','Three GPS faults, explained','A 12-minute jump to Amador County on May 7, an hour of indoor drift on April 8 and one bogus fix on April 1. Each time the radios show the unit never moved.'));
+  const ARD=TR.along_repeat_detail||[];
+  if(ARD.length)g.append(mk('notable','notable',(ARD.length===2?'Two dashcams':ARD.length+' dashcams')+' kept pace twice','Each travelled alongside you for a few minutes on two different days, on freeways toward the depot or across your working area. That fits another driver on your routes, and neither comes close to the test for a tail. The Transit tab has the dates.'));
   sec.append(g);
   sec.append(el('h3','sh','When the scanning happened'));
   const two=el('div','two');
-  two.append(chart('Activity by month','Rows logged each month',svgBars(S.months.map(m=>({k:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[0].slice(5)-1],v:m[1]})),{unit:' rows'}),'No logging between mid-June and the November Portland week.'));
-  two.append(chart('Activity by hour of day','Local time \u00b7 minutes with logging',svgBars(S.hours.map(r=>({k:r[0],v:r[1]})),{unit:' min',label:k=>k%3===0?k:''}),'The overnight minutes are the T-Deck left running at home.'));
+  two.append(chart('Activity by month','Rows logged each month',svgBars(S.months.map(m=>({k:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[0].slice(5)-1],v:m[1]})),{unit:' rows'}),'Almost nothing was logged between mid-June and the November Portland week.'));
+  two.append(chart('Activity by hour of day','Local time \u00b7 minutes with logging',svgBars(S.hours.map(r=>({k:r[0],v:r[1]})),{unit:' min',label:k=>k%3===0?k:''}),'The overnight minutes are a recorder left running at home.'));
   sec.append(two);sec.append(footer());stage.append(sec);
 }
 
 /* ================= REPORT ================= */
 async function viewReport(){
-  const [R,S,TH,E,CT,A,RD]=await Promise.all([J('report.json'),J('summary.json'),J('threats.json'),J('esp32.json'),J('cotravel.json'),J('anomaly.json'),J('riders.json')]);
+  const [R,S,TH,E,CT,A,RD,TR,CP]=await Promise.all([J('report.json'),J('summary.json'),J('threats.json'),J('esp32.json'),J('cotravel.json'),J('anomaly.json'),J('riders.json'),J('transit.json'),J('compare.json')]);const BD=S.totals.by_device,AL=TR.alto,LI=TR.lime;
   const D=R.driving,SW=R.shift_window,SH=R.shift,SS=R.shift_stats,V=R.vehicles,L=R.lora,SEC=R.security,C=R.corridor,TS=TH.summary;
   const sec=el('section');
   sec.append(el('div','eyebrow','Field report \u00b7 '+D.days+' driving days \u00b7 Mar 28 \u2013 Nov 15, 2026'));
   sec.append(el('h2','vh','What the drives show'));
-  sec.append(el('p','lead','A full reading of the dataset, all recorded on the T-Deck Plus: when and where you drove, which roads you kept returning to, where the radio environment is densest, what travels the road with you, and what the threat search turned up. Street and neighborhood names come from OpenStreetMap.'));
+  sec.append(el('p','lead','A full reading of the dataset, recorded on the T-Deck Plus and, from mid-May, on a Cardputer as well: when and where you drove, which roads you kept returning to, where the radio environment is densest, what travels the road with you, and what the threat search turned up. Street and neighborhood names come from OpenStreetMap.'));
   const secs=[];const S_=(id,title)=>{const s=el('div','rep-sec');s.id='r-'+id;s.append(el('h3','sh',title));secs.push([id,title,s]);return s;};
 
   // derived figures
@@ -1034,7 +1062,9 @@ async function viewReport(){
    ['Routes converge',`The first days were ${early.join('%, ')}% new road. From May on, about ${avgLate}% of each day's driving was on road you hadn't already driven.`],
    ['A freeway spine',`${fw[0].road} and ${fw[1].road} carry the most repeat driving, with ${fw.slice(2,4).map(r=>r.road).join(' and ')} close behind.`],
    ['Densest radio',`Downtown LA by volume (${fmt(dt.wifi)} Wi-Fi networks). Koreatown by intensity: ${fmt(kt.wifi)} networks in ${kt.minutes} minutes there.`],
-   ['A loud road',`${fmt(V.teslas)} distinct Teslas, ${fmt(R.gm_numbered)} GM vehicles and ${fmt(alto.devices)} Alto rideshare cars were heard. Most of what keeps pace with you is traffic.`],
+   ['A loud road',`${fmt(V.teslas)} distinct Teslas, ${fmt(R.gm_numbered)} GM vehicles and ${fmt(AL.cars)} Alto cars were heard. Most of what keeps pace with you is traffic.`],
+   ['Other ways around',`${fmt(LI.scooters)} Lime scooters, and they don't stay put: of those seen again a week or more later, almost none were where they had been. Alto cars met twice were almost never met in the same place.`],
+   ['Two recorders',`In the same car the Cardputer reads signals about ${Math.round(CP.rssi.road.WIFI.diff_med)} dB stronger and logs more networks, and only the T-Deck can name a Tesla. Each covers for the other.`],
    ['Riders, read from Bluetooth',`Extra signals in the cabin mark about ${RD.per_full_shift} rides on a typical full shift, with someone aboard for roughly ${RD.occupied_pct}% of the time. This is an estimate, not a trip log.`],
    ['Nothing hostile',`No persistent tail and no attack hardware. Plate readers and police gear appear only as fixed or passing infrastructure.`],
    ['LoRa did work',`The Meshtastic receiver logged ${L.packets} packets from ${L.nodes} nodes, all during the Portland week.`]
@@ -1045,14 +1075,14 @@ async function viewReport(){
   // 1 time
   let s=S_('time','1 \u00b7 When you drove');
   const mo=Object.fromEntries(R.months);
-  P(s,`<p>The T-Deck logged something on <b>${D.logged_days} calendar days</b>. ${D.days} of them had real driving (${D.min_km} km or more in motion), ${D.short_days} had a few kilometers, and ${D.static_days} were stationary, mostly the unit left running at home. Driving days cluster in spring: <b>${mo['2026-04']||0} in April</b> and <b>${mo['2026-05']||0} in May</b>, with ${mo['2026-03']||0} in late March and ${mo['2026-06']||0} in June. Logging stops after June 14 and resumes for the Portland week in November (${mo['2026-11']||0} driving days).</p>
+  P(s,`<p>The recorders logged something on <b>${D.logged_days} calendar days</b>. ${D.days} of them had real driving (${D.min_km} km or more in motion), ${D.short_days} had a few kilometers, and ${D.static_days} were stationary, mostly a unit left running at home. Driving days cluster in spring: <b>${mo['2026-04']||0} in April</b> and <b>${mo['2026-05']||0} in May</b>, with ${mo['2026-03']||0} in late March and ${mo['2026-06']||0} in June. After mid-June there are only stationary sessions (${(D.late_static||[]).map(longDate).join(' and ')}) until the Portland week in November (${mo['2026-11']||0} driving days). ${D.cardputer_only_drive_days.length} of the driving days (${andList(D.cardputer_only_drive_days.map(longDate))}) exist only in the Cardputer's log.</p>
   <p>${DN[wsort[0][0]]} was the most common driving day in Los Angeles (${wsort[0][1]}), then ${DN[wsort[1][0]]} (${wsort[1][1]}) and ${DN[wsort[2][0]]} (${wsort[2][1]}). ${DN[wsort[5][0]]} and ${DN[wsort[6][0]]} had ${wsort[5][1]===wsort[6][1]?wsort[5][1]+' each':wsort[5][1]+' and '+wsort[6][1]}: those were your days off. Weekends were ${wkend}% of Los Angeles driving days. The median LA day covered <b>${D.median_km} km</b>. The longest was ${longDate(D.longest.date)} (${D.longest.dow}): ${D.longest.km} km and ${D.longest.moving_h} hours in motion between ${D.longest.start} and ${D.longest.end}.</p>`);
   const tw=el('div','two');
   tw.append(chart('Driving days by weekday','Los Angeles days',svgBars(R.weekday_days.map(d=>({k:d[0],v:d[1]})),{unit:' days'})));
   tw.append(chart('Minutes in motion by hour','All driving, local time',svgBars(R.hour_profile.map(h=>({k:h[0],v:h[1]})),{unit:' min',label:k=>k%3===0?k:''}),'The 09:00 step-up is the start of the shift; the dip at 12:00\u201314:00 is the break; the evening tail is the drive home. Almost nothing was driven between 11 pm and 6 am.'));
   s.append(tw);
-  P(s,`<p><b>The working day.</b> The car itself keeps the timecard. On <b>${SH.days} days</b> between ${longDate(SH.first)} and ${longDate(SH.last)} a Tesla sat in the cabin broadcasting its Bluetooth name at close range for the whole shift. Half of those shifts began by <b>${SH.median_start}</b> and ended by <b>${SH.median_end}</b>. ${SH.full_days} were full shifts (median ${SH.median_hours} hours) and ${SH.part_days} were part days.</p>
-  <p><b>The car.</b> A Tesla's Bluetooth name is derived from its VIN, so each name is one car. You drove <b>${SH.cars} different cars in ${SH.days} shifts</b>; ${SH.repeat_cars===1?'only one came around twice':SH.repeat_cars+' came around twice'}. ${fmt(V.depot_teslas)} distinct Teslas were heard at the depot on Mission Road, ${fmt(V.depot_teslas_multi)} of them on more than one day, which is about the size of the fleet parked there. Your Chevrolet (CHEVROLET3983) shows up over Bluetooth after the shift on ${R.vehicle_days.filter(v=>/Chevrolet home/.test(v[0])).map(v=>v[1])[0]||0} of those days, for the drive home, and as a Wi-Fi hotspot on the first three days in Portland (November 9\u201311). ${SH.unknown_days} driving days carry no vehicle signature at all.</p>`);
+  P(s,`<p><b>The working day.</b> The car itself keeps the timecard. On <b>${SH.days} days</b> between ${longDate(SH.first)} and ${longDate(SH.last)} a Tesla sat in the cabin broadcasting its Bluetooth name at close range for the whole shift. Half of those shifts began by <b>${SH.median_start}</b> and ended by <b>${SH.median_end}</b>. ${SH.full_days} were full shifts (median ${SH.median_hours} hours) and ${SH.part_days} were part days. ${SH.cardputer_only_days.length} of them (${andList(SH.cardputer_only_days.map(longDate))}) were logged only by the Cardputer, which can't read a Tesla's name. The car is identified there by its Bluetooth address, which the T-Deck had matched to a name on another day.</p>
+  <p><b>The car.</b> A Tesla's Bluetooth name is derived from its VIN, so each name is one car. You drove <b>${SH.cars} different cars in ${SH.days} shifts</b>; ${SH.repeat_cars===1?'only one came around twice':'only '+SH.repeat_cars+' came around twice'}. ${fmt(V.depot_teslas)} distinct Teslas were heard at the depot on Mission Road, ${fmt(V.depot_teslas_multi)} of them on more than one day, which is about the size of the fleet parked there. Your Chevrolet (CHEVROLET3983) shows up over Bluetooth after the shift on ${R.vehicle_days.filter(v=>/Chevrolet home/.test(v[0])).map(v=>v[1])[0]||0} of those days, for the drive home, and as a Wi-Fi hotspot on the first three days in Portland (November 9\u201311). ${SH.unknown_days} driving days carry no vehicle signature at all.</p>`);
 
   // 2 geography
   s=S_('geo','2 \u00b7 The daily geography');
@@ -1082,7 +1112,7 @@ async function viewReport(){
   const dur=Object.fromEntries(R.stops.durations),stopTot=R.stops.durations.reduce((a,x)=>a+x[1],0),B=RD.breaks,VA=RD.validation;
   P(s,`<p>This dataset has no trip records. It does have the hours the fleet car was in range, the track, and every Bluetooth signal inside the cabin, and those three together say more than the earlier version of this report got out of them.</p>
   <p><b>A typical full shift</b> (${SS.full} of them): <b>${SS.km} km</b>, ${SS.moving_h} hours in motion, which is ${SS.moving_share}% of the shift, at an average ${SS.speed} km/h while moving. Away from the depot there were typically ${SS.stops} stops of four minutes or more, adding up to about ${SS.stop_min} minutes, and the longest of them ran ${SS.longest_stop} minutes.</p>
-  <p><b>The break.</b> On ${B.shifts_with} of ${RD.full_shifts} full shifts there is a stretch of ${B.range_min[0]} to ${B.range_min[1]} minutes where the T-Deck kept logging but heard no steady strong signal in the car at all: parked, with your own devices gone too. The median was <b>${B.median_min} minutes, starting around ${B.median_start}</b>. That is lunch, taken away from the car. On ${B.log_holes} more shifts the log itself has a hole of 20 minutes or more in the middle of the shift, with no rows written. That is what the unit being off or asleep looks like, so those can't be read either way.</p>`);
+  <p><b>The break.</b> On ${B.shifts_with} of ${RD.full_shifts} full shifts there is a stretch of ${B.range_min[0]} to ${B.range_min[1]} minutes where the recorder kept logging but heard no steady strong signal in the car at all: parked, with your own devices gone too. The median was <b>${B.median_min} minutes, starting around ${B.median_start}</b>. That is lunch, taken away from the car. On ${B.log_holes} more shifts the log itself has a hole of 20 minutes or more in the middle of the shift, with no rows written. That is what the unit being off or asleep looks like, so those can't be read either way.</p>${(RD.lunch_two_ways||[]).length?`<p><b>${RD.lunch_two_ways.length>1?'Two breaks are':'One break is'} confirmed independently.</b> On ${andList(RD.lunch_two_ways.map(l=>longDate(l.day)))} both recorders were running. The T-Deck stayed in the car and heard an empty cabin (${RD.lunch_two_ways.map(l=>l.cabin_min+' minutes from '+l.cabin_start).join('; ')}). The Cardputer went with you: its GPS fix sat ${andList(RD.lunch_two_ways.map(l=>l.metres+' m'))} from the T-Deck's (${RD.lunch_two_ways.map(l=>l.gps_start+'\u2013'+l.gps_end).join('; ')}), surrounded by strong Bluetooth signals the T-Deck did not hear. Two instruments, two different kinds of evidence, the same minutes.</p>`:''}`);
   s.append(el('h4',null,'Riders on board, inferred from Bluetooth <span class="tag">experimental</span>'));s.lastChild.style.cssText='font-family:var(--disp);font-size:15px;margin:18px 0 6px';
   P(s,`<p>Through a shift the cabin holds a steady number of strong Bluetooth signals, usually ${RD.baseline[0][0]}: your own devices and the car's. They change address every few minutes but the count stays level. When someone gets in, the count steps up by their phone, watch and earbuds, stays up for the ride, and steps back down. Counting those plateaus gives an estimate of rides without any trip data.</p>
   <ul><li><b>${fmt(RD.rides)} rides inferred across ${RD.shifts} shifts</b>, about <b>${RD.per_full_shift} on a typical full shift</b> (from ${RD.per_full_shift_range[0]} to ${RD.per_full_shift_range[1]}).</li>
@@ -1095,10 +1125,10 @@ async function viewReport(){
   rt.append(chart('Inferred rides by hour they began','All shifts',svgBars(RD.hours.filter(h=>h[0]>=9&&h[0]<=17).map(h=>({k:h[0],v:h[1]})),{unit:' rides',label:k=>k+':00'}),'The lunch dip shows here too.'));
   const rtb=el('div');rtb.append(table(['Where rides began','Rides','Where they ended','Rides'],RD.from_top.slice(0,8).map((f,i)=>[f[0],f[1],(RD.to_top[i]||[])[0],(RD.to_top[i]||[])[1]]),[1,3]));rt.append(rtb);
   s.append(rt);
-  P(s,`<p><b>How far to trust it.</b> Two checks support the reading. A standstill of 20 seconds or more falls within the three minutes around the start of a plateau ${VA.stop_at_start_pct}% of the time and around its end ${VA.stop_at_end_pct}%, against ${VA.stop_at_random_pct}% for random moments in a shift. And while the count is up the car behaves like it has somewhere to be: median ${VA.speed_with} km/h against ${VA.speed_without} km/h otherwise, and under 10 km/h for ${VA.slow_share_with}% of the time against ${VA.slow_share_without}%. Tightening the signal threshold from \u221266 to \u221260 dBm changes the total by ${Math.abs(RD.rides-VA.plateaus_at_minus60)} rides.</p>
-  <p>It still undercounts and it cannot label. A rider with Bluetooth off is invisible, two rides back to back merge into one, a hop under four minutes is dropped, and nothing here tells a paid trip from a friend in the passenger seat. Treat ${RD.per_full_shift} rides and ${RD.occupied_pct}% as a floor to check against your trip history.</p>
+  P(s,`<p><b>How far to trust it.</b> Two checks support the reading. A standstill of 20 seconds or more falls within the three minutes around the start of a plateau ${VA.stop_at_start_pct}% of the time and around its end ${VA.stop_at_end_pct}%, against ${VA.stop_at_random_pct}% for random moments in a shift. And while the count is up the car behaves like it has somewhere to be: median ${VA.speed_with} km/h against ${VA.speed_without} km/h otherwise, and under 10 km/h for ${VA.slow_share_with}% of the time against ${VA.slow_share_without}%. Tightening the signal threshold from \u221266 to \u221260 dBm changed the T-Deck total by seven rides. A third check is new: on the ${RD.xdev.length} shifts both recorders logged, the Cardputer's count (with its threshold moved by the 7 dB it reads high on Bluetooth) agreed with the T-Deck's, minute by minute, ${RD.xdev.map(x=>x.agree_pct+'% of the time on '+longDate(x.day)).join(' and ')}.</p>
+  <p>${RD.by_dev.C} of the ${RD.shifts} shifts rest on the Cardputer alone, and its log has holes of two to three hours on the two full ones, so their ride counts are low. It still undercounts and it cannot label. A rider with Bluetooth off is invisible, two rides back to back merge into one, a hop under four minutes is dropped, and nothing here tells a paid trip from a friend in the passenger seat. Treat ${RD.per_full_shift} rides and ${RD.occupied_pct}% as a floor to check against your trip history.</p>
   <p><b>Stops.</b> Away from home, depot and lodging there were ${stopTot} stops of four minutes or more across all days: ${dur['4\u201310 min']} short (4\u201310 min: pickups, drop-offs, quick waits), ${dur['10\u201330 min']} of 10\u201330 min, ${dur['30\u201360 min']} of 30\u201360 min and ${dur['over 1 h']} over an hour. Of the 20 longest, ${R.stops.longest_kinds.map(k=>k[1]+' sit at '+({food:'a restaurant or fast-food place','parking lot':'a parking lot','street or building':'the curb on an ordinary street',store:'a store','charging or fuel':'a charger or gas station',other:'somewhere OpenStreetMap doesn\'t classify'}[k[0]]||k[0])).join(', ')}.</p>
-  <p><b>Other drivers on the air.</b> Alto's company cars broadcast a hex-encoded "RIDEALTO" network name. ${fmt(alto.devices)} of them were heard, ${alto.multiday} on more than one day, mostly around ${alto.areas.slice(0,3).map(a=>a[0]).join(', ')}. ${uber.devices} Uber Beacon driver lights (${uber.areas.length?'mostly '+uber.areas[0][0]:''}) and ${lyft.devices} Lyft Amp displays also showed up.</p>
+  <p><b>Other drivers on the air.</b> Alto's company cars broadcast a hex-encoded "RIDEALTO" network name. ${fmt(alto.devices)} of them were heard, ${alto.multiday} on more than one day, mostly around ${alto.areas.slice(0,3).map(a=>a[0]).join(', ')}. ${uber.devices} Uber Beacon driver lights (${uber.areas.length?'mostly '+uber.areas[0][0]:''}) and ${lyft.devices} Lyft Amp displays also showed up. The <a href="#transit">Transit tab</a> follows all of them: where each Alto car was met, and what the ones met twice have in common.</p>
   <p><b>Next steps for the Uber study.</b> Join the inferred rides with your Uber trip history: it will show which plateaus are trips, how many trips left no Bluetooth trace, and whether the ${RD.occupied_pct}% holds. Then split engaged from deadhead kilometers by area and hour, and compare where rides begin with where you wait.</p>`);
   s.append(table(['Where you stopped repeatedly (away from home, depot, lodging)','Days','Visits','Total dwell'],R.stops.clusters.filter(c=>c.days>=2||c.mins>=45).slice(0,10).map(c=>[c.road?c.road+', '+c.place:c.place,c.days,c.visits,c.mins+' min']),[1,2,3]));
 
@@ -1127,8 +1157,8 @@ async function viewReport(){
   // 7 Wi-Fi landscape
   s=S_('wifi','7 \u00b7 The Wi-Fi landscape');
   const eero=(SEC.open_hidden_vendors.find(v=>/eero/i.test(v[0]))||[0,0])[1],c14=R.ch14,juan=c14.vendors.filter(v=>/Juan|AltoBeam/i.test(v[0])).reduce((a,v)=>a+v[1],0);
-  P(s,`<p><b>What the T-Deck can hear.</b> Its radio is 2.4 GHz only. Every network here is on channels 1\u201314; 5 GHz and 6 GHz networks, which carry most traffic in a modern home, don't appear at all.</p>
-  <p><b>Security, and why the earlier numbers were off.</b> Three firmware builds labeled security three different ways. The first, through April 14, wrote "WPA2" for every network, open ones included, so the ${fmt(SEC.unknown)} networks heard only in that period have no usable label. Most sessions recorded open or not open. Five sessions on May 11\u201315 recorded the actual protocol. The earlier version of this report divided across all three as if they were one.</p>
+  P(s,`<p><b>What the recorders can hear.</b> Both radios are 2.4 GHz only. Every network here is on channels 1\u201314; 5 GHz and 6 GHz networks, which carry most traffic in a modern home, don't appear at all.</p>
+  <p><b>Security, and why the earlier numbers were off.</b> Three firmware builds labeled security three different ways. The first, through April 14, wrote "WPA2" for every network, open ones included, so the ${fmt(SEC.unknown)} networks heard only in that period have no usable label. Most sessions recorded open or not open, and so does every Cardputer session. Five T-Deck sessions on May 11\u201315 recorded the actual protocol. The earlier version of this report divided across all three as if they were one.</p>
   <p>Of the <b>${fmt(SEC.known)} networks with a usable label</b>: ${fmt(SEC.secured_named)} are named and secured (${pct1(SEC.secured_named,SEC.known)}%), ${fmt(SEC.open_named)} are named and open (${pct1(SEC.open_named,SEC.known)}%), and ${fmt(SEC.hidden)} hide their name (${pct1(SEC.hidden,SEC.known)}%). A further ${fmt(SEC.open_hidden)} are both hidden and open, and ${fmt(eero)} of those are eero mesh units: each one broadcasts a second, hidden, unencrypted network for its own setup and mesh links. That isn't an open door into the home network, and it is counted under hidden.</p>
   <p>In the five sessions that recorded the protocol (${fmt(SEC.detail_n)} networks): <b>WPA2 on ${pct(SEC.wpa2,SEC.detail_n)}%</b>, WPA3 offered on <b>${pct1(SEC.wpa3_capable,SEC.detail_n)}%</b> (nearly all in WPA2/WPA3 transition mode; ${SEC.wpa3_only} are WPA3-only), old WPA still accepted alongside WPA2 on ${pct1(SEC.mixed,SEC.detail_n)}%, open ${pct1(SEC.open_detail,SEC.detail_n)}%. <b>${SEC.wep} networks still run WEP</b>, which can be broken in minutes, and ${SEC.wpa1} run first-generation WPA only.</p>
   <p><b>Open networks</b> are mostly deliberate guest and public service: ${R.open_top.filter(o=>!/_EXT|Extender/i.test(o[0])).slice(0,8).map(o=>o[0]).join(', ')}. The risky exception is factory-default range extenders left open (${ext.map(o=>o[0]+' \u00d7'+o[1]).join(', ')}), which pass traffic from the owner's home network to anyone nearby.</p>
@@ -1147,7 +1177,8 @@ async function viewReport(){
   <li><b>${fmt(V.limes)} Lime scooters and e-bikes</b>, each by its own vehicle number.</li>
   <li><b>${fmt(R.gm_numbered)} GM vehicles</b> by numbered hotspot name (CHEVROLET####, GMC####), plus ${fmt(R.gm_generic)} sightings of the generic "myChevrolet"-style hotspots, which can't be told apart.</li>
   <li><b>${fmt(V.dashcams)} dashcams</b> and <b>${fmt(V.fleet_telematics)}</b> fleet-telematics units (Samsara, Cradlepoint, Netradyne and similar) on commercial vehicles and buses.</li>
-  <li><b>${fmt(alto.devices)} Alto</b> rideshare cars, ${uber.devices} Uber Beacons and ${lyft.devices} Lyft Amps.</li></ul>
+  <li><b>${fmt(AL.cars)} Alto</b> cars, ${uber.devices} Uber Beacons and ${lyft.devices} Lyft Amps.</li></ul>
+  <p>The <a href="#transit">Transit tab</a> breaks these down by service and by how they move. Two results stand out. Lime scooters churn: ${LI.stay_by_gap[0].stayed_pct}% of those seen again the next day were still within 100 m, and ${LI.stay_by_gap[2].stayed_pct}% of those seen again four to seven days later. And of the ${AL.repeat.cars} Alto cars met on more than one day, only ${AL.repeat.same_500} were met within 500 m of an earlier meeting.</p>
   <p>That's why "something is following me" is usually traffic. Across all drives, <b>${fmt(tr1.devices)}</b> devices kept intermittent pace with you for at least 10 minutes and 3 km and never appeared again, and ${fmt(tr2.devices)} more rode alongside for part of a trip. A further ${fmt(cab.devices)} were strong, steady signals inside the car for ten minutes or more: your phone under a fresh address, or a rider's.</p>`);
 
   // 9 ESP32
@@ -1159,7 +1190,7 @@ async function viewReport(){
   <li><b>${pct(E.channels.esp_ch1,E.channels.esp_wifi)}% of ESP access points sit on channel 1,</b> the chip's default, against ${pct(E.channels.other_ch1,E.channels.other_wifi)}% of other networks.</li>
   <li><b>The movers are fleets and vehicles:</b> Lime scooters, Netradyne dashcams and IOSiX loggers on trucks, a handful of units that roam the city and cross your path days apart.</li>
   <li><b>${EF('Factory-default').n} boards still carry a factory name</b> like "ESP32" or "ESP_xxxxxx", and ${EF('AI-Thinker').n} run stock AI-Thinker firmware.</li></ul>
-  <p>None travelled with you, none imitates a public network, and none carries an attack-tool name. Your T-Deck Plus and your other ESP32 nodes don't appear at all, because none of them advertise. The ESP32 tab has the identification table.</p>`);
+  <p>None travelled with you, none imitates a public network, and none carries an attack-tool name. Your T-Deck Plus, your Cardputer and your other ESP32 nodes don't appear at all, because none of them advertise. The ESP32 tab has the identification table.</p>`);
 
   // 10 LoRa
   s=S_('lora','10 \u00b7 LoRa and Meshtastic');
@@ -1168,21 +1199,21 @@ async function viewReport(){
 
   // 11 footprint
   s=S_('footprint','11 \u00b7 Your own radio footprint');
-  P(s,`<p>Every session in this dataset was recorded on the <b>T-Deck Plus</b>. The absence of your own ESP32 nodes is good news: nothing you built advertises. No access-point beacons and no Bluetooth advertisements came from the T-Deck or from your other nodes, so a passive scanner like yours can't see them. Two transmissions remain, both from scanning:</p>
-  <ul><li><b>Wi-Fi scans are active.</b> The T-Deck Plus build calls <code>WiFi.scanNetworks(false, true)</code>, which defaults to an active scan. Every sweep sends probe requests carrying the board's own Espressif address. Your logs don't record probe requests, which is why this data can't show them, but anyone running a probe sniffer would see that same address wherever you drive.</li>
-  <li><b>Bluetooth scans are active too</b> (<code>setActiveScan(true)</code>): the T-Deck sends scan requests to devices that advertise. In the current source only the Cardputer ADV build scans Bluetooth passively.</li></ul>
-  <p><b>To go fully passive on the T-Deck Plus:</b> call <code>WiFi.scanNetworks(false, true, true, 120)</code> (passive, about 120 ms per channel) and switch its Bluetooth scan to <code>setActiveScan(false)</code>. Expect slower Wi-Fi sweeps and fewer Bluetooth device names, since some names only arrive in scan responses. If you'd rather keep active Wi-Fi scanning, randomizing the station address each session removes the stable fingerprint.</p>
+  P(s,`<p>${BD.T.files} sessions were recorded on the <b>T-Deck Plus</b> and ${BD.C.files} on the <b>Cardputer</b>. The absence of your own ESP32 nodes is good news: nothing you built advertises. No access-point beacons and no Bluetooth advertisements came from either recorder or from your other nodes, so a passive scanner can't see them. Two transmissions remain, both from scanning:</p>
+  <ul><li><b>Wi-Fi scans are active.</b> The T-Deck Plus build calls <code>WiFi.scanNetworks(false, true)</code>, which defaults to an active scan, and the Cardputer build starts its scans in the same default mode. Every sweep sends probe requests carrying the board's own Espressif address. Your logs don't record probe requests, which is why this data can't show them, but anyone running a probe sniffer would see that same address wherever you drive.</li>
+  <li><b>The T-Deck's Bluetooth scan is active</b> (<code>setActiveScan(true)</code>): it sends scan requests to devices that advertise. <b>The Cardputer's is passive, and the data shows it.</b> In ${fmt(BD.C.rows)} rows it never recorded a name that lives in a scan response: it heard ${fmt(CP.names.tesla_addr_c_all)} of the Teslas the T-Deck knows and named none of them.</li></ul>
+  <p><b>To go fully passive on the T-Deck Plus:</b> call <code>WiFi.scanNetworks(false, true, true, 120)</code> (passive, about 120 ms per channel) and switch its Bluetooth scan to <code>setActiveScan(false)</code>. Expect slower Wi-Fi sweeps and fewer Bluetooth device names, since some names only arrive in scan responses: the Cardputer named ${CP.names.ble_named_pct_c}% of the Bluetooth addresses it heard on the shared drives against the T-Deck's ${CP.names.ble_named_pct_t}%. If you'd rather keep active Wi-Fi scanning, randomizing the station address each session removes the stable fingerprint.</p>
   <p><b>What you carry does show.</b> The cabin count in section 4 is also a picture of you: about ${RD.baseline[0][0]} steady Bluetooth signals ride along on a typical shift, the car's and your own phone's among them. They rotate address on a timer, many of them exactly on the quarter hour, so nobody can follow one across days by address. Anyone standing next to the car can still count them.</p>`);
 
   // 12 threat recap
   s=S_('threats','12 \u00b7 Threat search, in brief');
-  P(s,`<p><b>No persistent tail.</b> Only your Chevrolet and one fleet Tesla you drove twice travelled with you on more than one day. The longest any unidentified device stayed with you was ${TS.longest_unknown_min} minutes. <b>No attack hardware:</b> no Pineapple, Flipper or attack-firmware signature, and all ${fmt(TS.joke_ssids)} alarming network names (from "FBI Surveillance Van" to "Pineapple") sat on ordinary home routers. <b>Surveillance infrastructure is present:</b> ${TS.flock_devices} Flock license-plate-reader indicators at fixed sites and ${TS.axon_devices} Axon units from passing or parked officers; none appeared on a second day and none stayed in range while you moved. <b>${fmt(TS.recurring_devices)} devices did turn up on three or more days</b> away from your depot and home. Every one is a scooter, a bus, a fleet car, another driver working the same streets, or a product whose units all share one address. <b>The GPS faults</b> were coordinate errors: during the May 7 jump the scanner kept hearing ${A.evidence.map(e=>e.seen_in_window+' '+(e.type==='WIFI'?'Wi-Fi':'Bluetooth')).join(' and ')} devices from home.</p>`);
+  P(s,`<p><b>No persistent tail.</b> Only your Chevrolet and the ${CT.multi_day.filter(m=>/fleet Tesla/.test(m.what)).length===1?'one fleet Tesla':CT.multi_day.filter(m=>/fleet Tesla/.test(m.what)).length+' fleet Teslas'} you drove twice travelled with you on more than one day. The longest any unidentified device stayed with you was ${TS.longest_unknown_min} minutes. <b>No attack hardware:</b> no Pineapple, Flipper or attack-firmware signature, and all ${fmt(TS.joke_ssids)} alarming network names (from "FBI Surveillance Van" to "Pineapple") sat on ordinary home routers. <b>Surveillance infrastructure is present:</b> ${TS.flock_devices} Flock license-plate-reader indicators at fixed sites and ${TS.axon_devices} Axon units from passing or parked officers; none appeared on a second day and none stayed in range while you moved. <b>${fmt(TS.recurring_devices)} devices did turn up on three or more days</b> away from your depot and home. Every one is a scooter, a bus, a fleet car, another driver working the same streets, or a product whose units all share one address. <b>The GPS faults</b> were coordinate errors: during the May 7 jump the scanner kept hearing ${A.evidence.map(e=>e.seen_in_window+' '+(e.type==='WIFI'?'Wi-Fi':'Bluetooth')).join(' and ')} devices from home.</p>`);
   const tl=el('p');const ta=el('a',null,'Open the full threat search \u2192');ta.href='#threats';ta.style.cssText='font-family:var(--disp);font-weight:600';tl.append(ta);s.append(tl);
 
   // 13 data notes
   s=S_('notes','13 \u00b7 Data notes');
   const Q=S.quality;
-  P(s,`<p>${S.totals.source_files} CSV files, of which ${S.totals.empty_files} held only a header (a session that never got a GPS fix), leaving ${S.totals.files} sessions. Of ${fmt(Q.lines)} data lines, ${fmt(S.totals.rows)} were kept and ${fmt(Q.dropped_unreadable)} dropped as unreadable. ${fmt(Q.recovered_no_address)} of the kept rows are Bluetooth sightings whose address the firmware had overwritten with the device's name; they are kept by name. Wi-Fi and Bluetooth are separated by type. GPS was limited to California and Oregon and checked three ways (see Method). Bluetooth totals are a floor, because the firmware records at most 31 advertisements per scan and ${pct(Q.ble_scans_at_cap,Q.ble_scans)}% of scans hit that cap. Street and neighborhood names: \u00a9 OpenStreetMap contributors, via Nominatim. Device positions are strength-weighted estimates, accurate to about a block for strong fixed transmitters.</p>`);
+  P(s,`<p>${S.totals.source_files} CSV files (${BD.T.source_files} from the T-Deck Plus, ${BD.C.source_files} from the Cardputer), of which ${S.totals.empty_files} held only a header (a session that never got a GPS fix), leaving ${S.totals.files} sessions. Of ${fmt(Q.lines)} data lines, ${fmt(S.totals.rows)} were kept and ${fmt(Q.dropped_unreadable)} dropped as unreadable. ${fmt(Q.recovered_no_address)} of the kept rows are Bluetooth sightings whose address the firmware had overwritten with the device's name; they are kept by name. Wi-Fi and Bluetooth are separated by type. GPS was limited to California and Oregon and checked three ways (see Method). Bluetooth totals are a floor, because the firmware records at most 31 advertisements per scan and ${pct(Q.ble_scans_at_cap,Q.ble_scans)}% of scans hit that cap. The Cardputer also keeps at most 24 Wi-Fi networks per scan. The Two recorders tab has the differences. Street and neighborhood names: \u00a9 OpenStreetMap contributors, via Nominatim. Device positions are strength-weighted estimates, accurate to about a block for strong fixed transmitters.</p>`);
 
   secs.forEach(([id,title,node])=>{const b=el('button',null,title.replace(/^\d+ \u00b7 /,''));b.onclick=()=>node.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});toc.append(b);sec.append(node);});
   sec.append(mapLink('See the high-RF regions and frequented roads on the map \u2192'));
@@ -1235,11 +1266,11 @@ async function viewSignals(){
 }
 
 async function viewThreats(){
-  const [TH,CT,E]=await Promise.all([J('threats.json'),J('cotravel.json'),J('esp32.json')]);const TS=TH.summary,TT=TH.tests;
+  const [TH,CT,E,TR]=await Promise.all([J('threats.json'),J('cotravel.json'),J('esp32.json'),J('transit.json')]);const TS=TH.summary,TT=TH.tests,ARD=TR.along_repeat_detail||[];
   const sec=el('section');
   sec.append(el('div','eyebrow','Concentrated search for hostile networks & tracking'));
   sec.append(el('h2','vh','Is anything actually hunting you?'));
-  sec.append(el('p','lead','No. This version reran the search four different ways, added a scan for the signatures of attack tools, and included the Bluetooth rows the earlier version could not read. The answer held. Your own ESP32 nodes are excluded by design; they don\'t transmit.'));
+  sec.append(el('p','lead','No. The search runs four different ways, plus a scan for the signatures of attack tools, and now covers both recorders\' logs. The answer held. Your own ESP32 nodes are excluded by design; they don\'t transmit.'));
   sec.append(tiles([[TS.persistent_external_tails,'persistent tails','devices that follow you across days'],[TS.attack_hw,'attack devices','Pineapple, Flipper, Marauder, deauther'],
     [TS.longest_unknown_min+' min','longest stay','by any device that isn\'t yours or the car\'s'],[TS.flock_devices,'Flock ALPR indicators','fixed license-plate-reader sites'],[TS.axon_devices,'Axon units','body-camera gear, passing or parked']]));
   const find=(cls,pill,title,body)=>{const f=el('div','finding '+cls);f.append(el('h4',null,title+' <span class="pill '+(cls==='good'?'good':cls==='notable'?'notable':'expl')+'">'+pill+'</span>'));if(body)f.append(el('p',null,body));return f;};
@@ -1250,6 +1281,9 @@ async function viewThreats(){
   sec.append(table(['What rode along','Devices','Episodes','Days','Typical length',''],CT.classes.map(r=>{const t=tag[r.klass]||(/cabin/.test(r.klass)?['notable','in cabin']:['expl','traffic']);return [r.klass.charAt(0).toUpperCase()+r.klass.slice(1),fmt(r.devices),fmt(r.episodes),r.days,r.median_min+' min','<span class="pill '+t[0]+'">'+t[1]+'</span>'];}),[1,2,3,4]));
   sec.append(el('div','note','<b>Reading this table.</b> The traffic rows are addresses that appeared for one stretch of one drive and never again: vehicles beside you going the same way. The cabin row is strong, steady signals inside the car for ten minutes or more. A phone changes its address every few minutes, so one phone produces many of these in a day; yours accounts for most of them, riders for the rest.'));
 
+  if(ARD.length){const mn=Math.min(...ARD.flatMap(d=>d.runs.filter(r=>r.with_you).map(r=>r.mins))),mx=Math.max(...ARD.flatMap(d=>d.runs.filter(r=>r.with_you).map(r=>r.mins)));
+    const f=find('notable','below the bar','Shorter company, twice: '+(ARD.length===2?'two':ARD.length)+' dashcams','This test needs ten minutes and 3 km together. A looser one (800 m or more of shared travel, any length of time) finds '+(ARD.length===2?'two':ARD.length)+' dashcams that kept pace with you on two different days each, for '+mn+' to '+mx+' minutes at a time, on freeways toward your depot or across your working area. Neither was ever heard within '+Math.floor(Math.min(...ARD.map(d=>d.nearest_home_km)))+' km of your home. The likeliest reading is another driver on the same routes. The dates and stretches are on the Transit tab.');
+    sec.append(f);}
   sec.append(el('h3','sh','Test 2 \u00b7 What stayed with you longest on any one day?'));
   sec.append(el('p','lead','Every device heard in 15 or more separate minutes, over at least half an hour, at places 3 km or more apart. Any signal strength, any day. Your own named devices are left out; this is everything else, longest first.'));
   sec.append(table(['Date','What it was','Radio','Minutes present','Median signal','First to last heard','Sightings spread over'],TT.longest.map(x=>[mono(x.date),x.what,x.kind,x.minutes,x.rssi_med+' dBm',x.start+'\u2013'+x.end,x.km+' km']),[3,4,6],[1]));
@@ -1281,7 +1315,7 @@ async function viewEsp32(){
   const sec=el('section');
   sec.append(el('div','eyebrow','Other people\'s ESP32 / Espressif devices'));
   sec.append(el('h2','vh','What the ESP boards are, and what they\'re doing'));
-  sec.append(el('p','lead','Your T-Deck Plus and your other ESP32 nodes never advertise, so none of them appear here. Everything below is somebody else\'s Espressif chip: '+fmt(E.total)+' devices, identified by address against the current IEEE registry. '+fmt(E.named)+' broadcast a name, and '+fmt(E.identified)+' of those match a product.'));
+  sec.append(el('p','lead','Your T-Deck Plus, your Cardputer and your other ESP32 nodes never advertise, so none of them appear here. Everything below is somebody else\'s Espressif chip: '+fmt(E.total)+' devices, identified by address against the current IEEE registry. '+fmt(E.named)+' broadcast a name, and '+fmt(E.identified)+' of those match a product.'));
   sec.append(tiles([[fmt(E.total),'ESP-based devices','not yours'],[fmt(E.registered_boards),'on Espressif addresses',fmt(E.ble)+' Bluetooth \u00b7 '+fmt(E.wifi)+' Wi-Fi \u00b7 '+E.both_radios+' on both'],[fmt(E.la_form),'older-style hotspots','ESP soft-AP addresses'],
     [pct(E.fixed,E.radios)+'%','never moved','heard within 150 m every time'],[fmt(E.multiday),'heard on 2+ days','fixed installs on your regular roads'],[fmt(E.mobile),'moved','scooters, trucks, roaming units']]));
 
@@ -1312,7 +1346,7 @@ async function viewEsp32(){
   <p><b>Riding on vehicles.</b> ${fmt(E.mobile)} ESP radios moved. ${lime.mobile} are Lime scooters and e-bikes (only ${lime.n} of the ${fmt(E.lime_all)} Lime vehicles heard advertise from an Espressif address; most use Quectel or Texas Instruments radios). ${drv.n} Netradyne Driveri dashcam units and ${eld.n} IOSiX logging devices ride on commercial trucks: the dashcam hosts a link to the vehicle's data port, the logger records driver hours. ${pwr.mobile} portable power stations were on the move, which is a van, a food truck or a work crew.</p>
   <p><b>Roaming the city.</b> A few units are worth describing because they recur. ${ls.mobile} boards named just "LS" were each heard in several places days apart, one on ${(E.mover_multiday.find(m=>m[1]==='LS')||[0,0,0])[2]} different days up to ${(E.mover_multiday.find(m=>m[1]==='LS')||[0,0,0,0])[3]} km apart, never for more than three minutes. Vehicle radar units named "MSRADAR\u2026" come in pairs; one pair was heard twice, ten days and 22 km apart, for a few seconds each time. That is the signature of a bus or truck whose route crosses yours. A follower would stay in range.</p>
   <p><b>Marking businesses.</b> ${maz.n} Mazzer commercial coffee grinders, each hosting a small network for setup and service, mark cafes in ${(maz.areas||[]).slice(0,2).join(' and ')}. A Zumex juicer, Raypak pool heaters and Blaze Audio amplifiers are the same kind of signal: commercial equipment announcing itself.</p>
-  <p><b>The unnamed ${fmt(anon.n)}.</b> These advertise from an Espressif address with no name. ${fmt(anon.fixed)} never moved and ${anon.multiday} were heard on more than one day, so they're installed devices. Many products put their identity in the advertisement's data fields, which the T-Deck doesn't log. Logging that payload would identify most of them.</p>`);
+  <p><b>The unnamed ${fmt(anon.n)}.</b> These advertise from an Espressif address with no name. ${fmt(anon.fixed)} never moved and ${anon.multiday} were heard on more than one day, so they're installed devices. Many products put their identity in the advertisement's data fields, which neither recorder logs. Logging that payload would identify most of them.</p>`);
   sec.append(el('div','note','<b>Nothing here was following you.</b> No ESP board travelled with you on any drive. '+(E.checks.lure_named_open===0?'No open ESP hotspot imitates':fmt(E.checks.lure_named_open)+' open ESP hotspots imitate')+' a public or brand network, and '+(E.checks.attack_tool_names===0?'no board carries':fmt(E.checks.attack_tool_names)+' boards carry')+' the default name of an attack tool. ESP-based attack gear would look different: a lure copying a public network name, or a board keeping pace with the car.'));
 
   sec.append(el('h3','sh','Identified by product'));
@@ -1344,13 +1378,13 @@ async function viewRoutes(){
   sec.append(el('p','lead','The working data behind the report: every driving day, every fleet shift, the I-10 passes, the roads you repeat and where you stopped. The Report tab reads it; this tab lists it.'));
   const drive=SH.filter(s=>s.kind==='drive'),rest=SH.filter(s=>s.kind!=='drive');
   sec.append(el('h3','sh','Every driving day'));
-  sec.append(table(['Date','Day','Region','Moving','First move','Last move','Distance','Stops','I-10 km','Vehicle heard in the cabin'],drive.map(s=>[mono(s.date),s.dow,s.region,s.moving_h+' h',s.start||'\u2014',s.end||'\u2014',fmt(s.km)+' km',s.stops,s.i10_km||'\u2014',s.vehicle]),[3,6,7,8]));
-  sec.append(el('div','note','<b>'+rest.length+' more days have data but little or no driving:</b> '+rest.map(s=>longDate(s.date)+' ('+(s.km>=0.3?s.km+' km, ':'')+fmt(s.logged_min)+' min logged)').join(', ')+'. Most are the T-Deck left running at home or at a stop.'));
+  sec.append(table(['Date','Day','Region','Recorder','Moving','First move','Last move','Distance','Stops','I-10 km','Vehicle heard in the cabin'],drive.map(s=>[mono(s.date),s.dow,s.region,s.rec==='both'?'both':s.rec,s.moving_h+' h',s.start||'\u2014',s.end||'\u2014',fmt(s.km)+' km',s.stops,s.i10_km||'\u2014',s.vehicle]),[4,7,8,9]));
+  sec.append(el('div','note','<b>'+rest.length+' more days have data but little or no driving:</b> '+rest.map(s=>longDate(s.date)+' ('+(s.km>=0.3?s.km+' km, ':'')+fmt(s.logged_min)+' min logged)').join(', ')+'. Most are a recorder left running at home or at a stop.'));
   sec.append(el('h3','sh','Every fleet shift'));
-  sec.append(el('p','lead','A shift is the span the fleet Tesla was in range of the T-Deck. The car column is the start of its Bluetooth name. Rides are the experimental estimate from the Report; treat them as a floor.'));
+  sec.append(el('p','lead','A shift is the span the fleet Tesla was in range of a recorder. The car column is the start of its Bluetooth name. On Cardputer shifts the name comes from the car\'s address. Rides are the experimental estimate from the Report; treat them as a floor.'));
   const rd=Object.fromEntries(RD.days.map(d=>[d.date,d]));
-  sec.append(table(['Date','Day','Car','In range','Hours','Distance','In motion','Stops 4+ min','Longest empty-cabin gap','Rides (est.)','Rider aboard (est.)'],R.shifts.map(s=>{const d=rd[s.date]||{};return [mono(s.date),s.dow,mono(s.car),s.start+'\u2013'+s.end,s.hours,fmt(s.km)+' km',s.moving_share+'%',s.stops,d.break_min>=20?d.break_min+' min from '+d.break_start+(d.break_kind==='nolog'?' <span class="tag">log gap</span>':''):'\u2014',d.rides==null?'\u2014':d.rides,d.occupied_pct==null?'\u2014':d.occupied_pct+'%'];}),[4,5,6,7,9,10]));
-  sec.append(el('div','note','<b>Reading the gap column.</b> It is the longest stretch of a shift with no steady strong Bluetooth signal in the car. Where the T-Deck kept logging through it, the car was parked with nobody in it, and on most full shifts that is lunch. "Log gap" means the T-Deck wrote no rows at all for that stretch, so it says nothing about the cabin.'));
+  sec.append(table(['Date','Day','Car','Recorder','In range','Hours','Distance','In motion','Stops 4+ min','Longest empty-cabin gap','Rides (est.)','Rider aboard (est.)'],R.shifts.map(s=>{const d=rd[s.date]||{};return [mono(s.date),s.dow,mono(s.car),d.dev==='C'?'Cardputer':s.rec==='both'?'T-Deck (both ran)':'T-Deck',s.start+'\u2013'+s.end,s.hours,fmt(s.km)+' km',s.moving_share+'%',s.stops,d.break_min>=20?d.break_min+' min from '+d.break_start+(d.break_kind==='nolog'?' <span class="tag">log gap</span>':''):'\u2014',d.rides==null?'\u2014':d.rides,d.occupied_pct==null?'\u2014':d.occupied_pct+'%'];}),[5,6,7,8,10,11]));
+  sec.append(el('div','note','<b>Reading the gap column.</b> It is the longest stretch of a shift with no steady strong Bluetooth signal in the car. Where the recorder kept logging through it, the car was parked with nobody in it, and on most full shifts that is lunch. "Log gap" means the recorder wrote no rows at all for that stretch, so it says nothing about the cabin. The Cardputer shifts have long log gaps, so their ride counts are low.'));
   sec.append(el('h3','sh','The I-10 corridor (East LA \u2194 Covina)'));
   sec.append(chart(CO.traversals.length+' commute passes \u00b7 '+CO.length_km+' km each way','Average speed per pass',
     svgBars(CO.traversals.map(t=>({k:t.date.slice(5),v:Math.round(t.avg_kmh)})),{unit:' km/h',label:(k,i)=>i%2===0?k:'',colorFn:r=>r.v<45?cssv('--crit'):r.v<70?cssv('--warn'):cssv('--good')}),
@@ -1360,38 +1394,60 @@ async function viewRoutes(){
   sec.append(table(['Road','Type','Stretches','Most days','Neighborhoods'],[...R.roads.freeways.map(r=>[r.road,'freeway',r.stretches,r.peak,(r.hoods||[]).slice(0,2).join(', ')]),...R.roads.streets.slice(0,10).map(r=>[r.road,'street',r.stretches,r.peak,(r.hoods||[]).slice(0,2).join(', ')])],[2,3]));
   sec.append(el('h3','sh','Where you stopped'));
   sec.append(table(['Place','Days','Visits','Total dwell'],[...R.stops.anchors.map(a=>['<span class="pill good">'+a.anchor+'</span>',a.days,a.visits,fmt(a.mins)+' min']),...R.stops.clusters.slice(0,12).map(c=>[c.road?c.road+', '+c.place:c.place,c.days,c.visits,c.mins+' min'])],[1,2,3]));
-  sec.append(el('div','note','<b>Stops are four minutes or more at a standstill, while the T-Deck was logging.</b> Home shows more minutes than the depot because the unit was often left running overnight.'));
+  sec.append(el('div','note','<b>Stops are four minutes or more at a standstill, while a recorder was logging.</b> Home shows more minutes than the depot because the unit was often left running overnight.'));
   sec.append(mapLink('Open the repeat-roads layer on the map \u2192'));
   sec.append(footer());stage.append(sec);
 }
 
 async function viewMethod(){
-  const [S,A,R,E,TH]=await Promise.all([J('summary.json'),J('anomaly.json'),J('report.json'),J('esp32.json'),J('threats.json')]);const Q=S.quality,RC=Q.radiocheck,T=S.totals;
+  const [S,A,R,E,TH,H,CP,RD,TR]=await Promise.all([J('summary.json'),J('anomaly.json'),J('report.json'),J('esp32.json'),J('threats.json'),J('history.json'),J('compare.json'),J('riders.json'),J('transit.json')]);const Q=S.quality,RC=Q.radiocheck,T=S.totals,BD=T.by_device,QC=CP.quality_c;
   const sec=el('section');
   sec.append(el('div','eyebrow','How the data was made trustworthy'));
   sec.append(el('h2','vh','Method & data quality'));
-  sec.append(el('p','lead','Raw WiGLE-style logs are messy: unquoted commas in network names, split lines, fixes that land in the ocean, and in this case a firmware fault that overwrote Bluetooth addresses. Everything here runs on a cleaned dataset, with every repair counted.'));
+  sec.append(el('p','lead','Raw WiGLE-style logs are messy: unquoted commas in network names, split lines, fixes that land in the ocean, a firmware fault that overwrote Bluetooth addresses, and two recorders that hear differently. Everything here runs on a cleaned dataset, with every repair counted.'));
 
-  sec.append(el('h3','sh','What changed in this version'));
-  sec.append(el('p','lead','This is a full re-run from the raw files. These are the figures that moved, and why.'));
+  sec.append(el('h3','sh','What changed in this version (6): the Cardputer'));
+  sec.append(el('p','lead','Version 5 used the T-Deck Plus logs alone. This one adds the Cardputer\'s '+BD.C.files+' sessions and reruns every stage on both. These are the figures that moved.'));
+  const d19=CP.by_day[0],d31=CP.by_day[CP.by_day.length-1],ar=(a,b)=>fmt(a)+' \u2192 '+fmt(b);
+  sec.append(table(['What','Version 5','Now','Why'],[
+    ['Rows',fmt(H.rows),fmt(T.rows),fmt(BD.C.rows)+' rows from the Cardputer, '+longDate(BD.C.first)+' to '+longDate(BD.C.last)+'.'],
+    ['Sessions and days with data',H.sessions+' sessions, '+H.days+' days',T.files+' sessions, '+T.days+' days',BD.C.files+' Cardputer sessions on '+BD.C.days+' days. '+(T.days-H.days)+' of those days have no T-Deck log.'],
+    ['Wi-Fi networks',fmt(H.wifi),fmt(T.wifi_devices),'The Cardputer heard '+fmt(BD.C.wifi_devices)+'; '+fmt(T.wifi_devices-H.wifi)+' were new.'],
+    ['Bluetooth addresses',fmt(H.ble),fmt(T.ble_devices),'The Cardputer heard '+fmt(BD.C.ble_devices)+'; '+fmt(T.ble_devices-H.ble)+' were new.'],
+    ['Driving days',H.drive_days,R.driving.days,andList(R.driving.cardputer_only_drive_days.map(longDate))+' were driven with only the Cardputer logging.'],
+    ['Distance',fmt(H.km)+' km',fmt(R.driving.km)+' km','Where both units logged, the T-Deck\'s track is used and the Cardputer\'s is left out, so no kilometer counts twice. The Cardputer adds '+fmt(CP.track.c_extra_km)+' km the T-Deck missed.'],
+    ['Fleet shifts identified',H.shift_days+' shifts, '+H.shift_cars+' cars',R.shift.days+' shifts, '+R.shift.cars+' cars','The Cardputer hears a Tesla\'s Bluetooth address but not its name. The T-Deck\'s logs tie '+fmt(R.vehicles.teslas)+' Tesla names to addresses, one to one, so the car on a Cardputer-only day is named through its address.'],
+    ['Rides inferred',fmt(H.rides)+' on '+H.ride_shifts+' shifts',fmt(RD.rides)+' on '+RD.shifts+' shifts','Three Cardputer shifts added. Each shift uses one recorder, never both pooled. The Cardputer\'s threshold is \u221259 dBm instead of \u221266, the 7 dB it reads high on Bluetooth.'],
+    ['Distinct Teslas',fmt(H.teslas),fmt(R.vehicles.teslas),'No change. The Cardputer names none; it heard '+fmt(CP.names.tesla_addr_c_all)+' of the same cars by address.'],
+    ['Lime scooters and e-bikes',fmt(H.limes),fmt(R.vehicles.limes),'The Cardputer named '+fmt(TR.lime.named_by_c)+' and added '+fmt(TR.lime.c_only)+' the T-Deck never heard.'],
+    ['Alto cars',fmt(H.alto),fmt(TR.alto.cars),fmt(TR.alto.c_only)+' were heard only by the Cardputer.'],
+    ['ESP32 / Espressif devices',fmt(H.esp),fmt(E.total),'More sessions, more boards. The shares hold: '+pct(E.fixed,E.radios)+'% never moved.'],
+    ['Devices met on three or more days',fmt(H.recurring),fmt(TH.summary.recurring_devices),'More days to recur on, and the Cardputer catches more passing transmitters. Still all scooters, buses, fleet cars and neighbors on the same streets.'],
+    ['Alarming network names',fmt(H.joke),fmt(TH.summary.joke_ssids),'More networks heard. All on home routers.'],
+    ['Axon units',H.axon,TH.summary.axon_devices,'Counted, not mapped. Still none that stayed in range while you moved.'],
+    ['I-10 commute passes',H.corridor,R.corridor.traversals,'Two westbound runs the Cardputer logged.'],
+    ['Longest stay by an unidentified device',H.longest_unknown+' min',TH.summary.longest_unknown_min+' min','No change. The threat search is still clean.']],[],[0,1,2,3]));
+  sec.append(el('div','note','<b>New analyses in this version.</b> A side-by-side of the two recorders on the '+CP.shared.road.mins+' minutes both were moving in the same car (Two recorders tab), and a census of transit, fleets and scooters (Transit tab). The Cardputer\'s own data problems are listed under the row ledger below.'));
+  sec.append(el('h3','sh','What changed in version 5: the re-run'));
+  sec.append(el('p','lead','Version 5 was a full re-run from the raw T-Deck files. These are its corrections to the first version; the "version 5" column is what it reported.'));
   const sx=R.security;
-  sec.append(table(['What','Before','Now','Why'],[
-    ['Rows kept','3,632,087',fmt(T.rows),'An early firmware fault wrote a Bluetooth device\'s name into the address column whenever the name was 16 characters or longer. '+fmt(Q.recovered_no_address)+' such rows were being dropped. They are now kept by name.'],
+  sec.append(table(['What','Before','Version 5','Why'],[
+    ['Rows kept','3,632,087',fmt(H.rows),'An early firmware fault wrote a Bluetooth device\'s name into the address column whenever the name was 16 characters or longer. '+fmt(Q.recovered_no_address)+' such rows were being dropped. They are now kept by name.'],
     ['Rows dropped as unreadable','116,666',fmt(Q.dropped_unreadable),'What remains is almost all from three sessions (May 11, 13 and 15) where a test build logged neither a usable address nor a name.'],
     ['Distinct Teslas','3,584',fmt(R.vehicles.teslas),'A Tesla\'s Bluetooth name is 18 characters, so every Tesla before May 16 was in the dropped rows.'],
-    ['Days the car you drove is identified','7',R.shift.days,'Same cause. The earlier text said earlier days carried "no in-cabin vehicle signature"; they did.'],
-    ['Lime scooters and e-bikes','2,229',fmt(R.vehicles.limes),'Same cause.'],
-    ['ESP32 / Espressif devices','2,134',fmt(E.total),'Matched against the current IEEE registry ('+E.registry.blocks+' Espressif blocks; the library used before knew 172). Older-style hotspot addresses added. Devices the firmware had mis-tagged removed.'],
+    ['Days the car you drove is identified','7',H.shift_days,'Same cause. The earlier text said earlier days carried "no in-cabin vehicle signature"; they did.'],
+    ['Lime scooters and e-bikes','2,229',fmt(H.limes),'Same cause.'],
+    ['ESP32 / Espressif devices','2,134',fmt(H.esp),'Matched against the current IEEE registry ('+E.registry.blocks+' Espressif blocks; the library used before knew 172). Older-style hotspot addresses added. Devices the firmware had mis-tagged removed.'],
     ['Camera recorders counted as ESP','41','0','They are Guangzhou Juan hardware. The channel-14 finding stands and moved to the Wi-Fi section.'],
     ['"DRI_Router" units','Netradyne dashcams','DataRemote cellular routers','A wrong identification; the address block settles it.'],
-    ['Networks offering WPA3','about 0.5%',pct1(sx.wpa3_capable,sx.detail_n)+'%','The protocol was only recorded in five sessions. The earlier figure divided those by every network in the dataset.'],
-    ['Named open networks','8,615 of 300,392 (2.9%)',fmt(sx.open_named)+' of '+fmt(sx.known)+' ('+pct1(sx.open_named,sx.known)+'%)','Networks heard only while the firmware labeled everything "WPA2" are left out of the base.'],
-    ['Driving days','42',R.driving.days,'Now defined as '+R.driving.min_km+' km or more in motion. The earlier count included days with a kilometer or two of movement, and April 8, when the unit sat indoors and the GPS drifted.'],
+    ['Networks offering WPA3','about 0.5%',H.wpa3_pct+'%','The protocol was only recorded in five sessions. The earlier figure divided those by every network in the dataset.'],
+    ['Named open networks','8,615 of 300,392 (2.9%)',fmt(H.open_named)+' of '+fmt(H.sec_known)+' ('+pct1(H.open_named,H.sec_known)+'%)','Networks heard only while the firmware labeled everything "WPA2" are left out of the base.'],
+    ['Driving days','42',H.drive_days,'Defined as '+R.driving.min_km+' km or more in motion. The earlier count included days with a kilometer or two of movement, and April 8, when the unit sat indoors and the GPS drifted.'],
     ['Your Chevrolet','"after about 17:30 on most LA driving days"','8 fleet days, plus Portland','Counted day by day: over Bluetooth after the shift on 8 fleet-shift days and 2 others, and as a Wi-Fi hotspot on November 9\u201311.'],
     ['"Razer Lev3"','listed as your own gear','a product whose units share one address','It turned up on 8 days in 8 places, always briefly. That is many units with the same factory address, not one device.'],
-    ['Minutes spent in a region','e.g. Downtown 904','e.g. Downtown '+R.regions.wifi[0].minutes,'Minutes were summed cell by cell, counting a minute once per cell crossed. Now each minute counts once.'],
+    ['Minutes spent in a region','e.g. Downtown 904','e.g. Downtown '+H.downtown_min,'Minutes were summed cell by cell, counting a minute once per cell crossed. Now each minute counts once.'],
     ['GPS faults handled','1','3 kinds','Added a check of every fix against fixed transmitters ('+RC.flagged_minutes+' minutes set aside) and removal of frozen fixes ('+Q.stale_events+' events).'],
-    ['Alarming network names','530',fmt(TH.summary.joke_ssids),'A tighter match. "Trojans" on its own is USC fans.'],
+    ['Alarming network names','530',fmt(H.joke),'A tighter match. "Trojans" on its own is USC fans.'],
     ['Bluetooth addresses with a name','44,015',fmt(S.ble_named[0]),'A device\'s name is now the name it sent most often, not the most common value including blanks.'],
     ['Tail search','one co-travel rule','four tests + signature scan','See Threat search.']],[],[0,1,2,3]));
 
@@ -1405,10 +1461,18 @@ async function viewMethod(){
   barList(q1,Q.gps.map(r=>({k:GP[r[0]]||r[0],v:r[1],c:r[0]==='ok'?cssv('--good'):cssv('--warn')})));g.append(q1);
   sec.append(g);
   sec.append(el('div','note','<b>Reading the two cards.</b> "Kept by name" rows are Bluetooth sightings whose address the firmware overwrote with the device\'s name; "cut short" means only the first 17 characters of the name survived. "Contradicted by radios" and "frozen fix" are the two new GPS checks described below. Every row is kept in the counts; only rows with a usable fix are placed on the map.'));
-  sec.append(el('div','note','<b>Files.</b> '+T.source_files+' CSV files, '+T.empty_files+' of them header-only: the firmware creates a file at every boot and writes rows only once it has a GPS fix. That leaves '+T.files+' sessions. <b>Dropped:</b> '+Q.dropped.map(d=>fmt(d[1])+' '+({'bluetooth row with corrupted address and no usable name':'Bluetooth rows with a corrupted address and no usable name','continuation or garbage line':'stray continuation or garbage lines'}[d[0]]||d[0])).join('; ')+'. <b>Times</b> are GPS time (UTC) converted to Pacific; '+fmt(Q.est_time)+' rows with an impossible date took the time of the row before.'));
+  sec.append(el('div','note','<b>Files.</b> '+T.source_files+' CSV files ('+BD.T.source_files+' T-Deck Plus, '+BD.C.source_files+' Cardputer), '+T.empty_files+' of them header-only ('+BD.T.empty_files+' and '+BD.C.empty_files+'): the firmware creates a file at every boot and writes rows only once it has a GPS fix. That leaves '+T.files+' sessions. <b>Dropped:</b> '+Q.dropped.map(d=>fmt(d[1])+' '+({'bluetooth row with corrupted address and no usable name':'Bluetooth rows with a corrupted address and no usable name','continuation or garbage line':'stray continuation or garbage lines'}[d[0]]||d[0])).join('; ')+'. <b>Times</b> are GPS time (UTC) converted to Pacific; '+fmt(Q.est_time)+' rows with an impossible date took the time of the row before.'));
 
+  sec.append(el('h3','sh','The Cardputer\'s log: what needed fixing'));
+  P(sec,`<p>The Cardputer's rows parse cleanly: none of its ${fmt(BD.C.rows)} rows needed the name-and-address repairs the early T-Deck builds did. Its problems are fewer and different.</p>
+  <ul><li><b>Corrupted coordinates in ${QC.bad_coord_events.length} scans (${QC.bad_coord_rows} rows).</b> For one second at a time a coordinate lost its leading digits: 34.036198 written as 0.036198, or a longitude written as 0.000000. The rows a second before and after are right. That is what a log looks like when the position is read while it is being updated, and the firmware source fits: on the Cardputer a separate task feeds the GPS parser while the wardrive task reads the position from it, with nothing to stop a read mid-update. All ${QC.bad_coord_events.length} are in the last three files (June 2 and 17). The rows keep their observations and lose their position.</li>
+  <li><b>${QC.time_island_rows} rows with a timestamp about 14 hours off</b> in one file, in the middle of otherwise ordered rows. They take the time of the row before.</li>
+  <li><b>${QC.drift_rows} rows in one minute</b> where the fix sat more than 500 m from the transmitters in range (check 2 below). Position set aside.</li>
+  <li><b>Bluetooth capped at 8 per scan from June 2, 12:43.</b> The last three files (${QC.ble_cap8_files.map(f=>f.replace('wardrive_','')).join(', ')}) never hold more than 8 Bluetooth rows per scan, against 31 before. The Cardputer has no PSRAM, and its limits were tuned over these weeks to keep dense blocks from overrunning memory. This build wrote 8 rows every 5 seconds from a queue that filled faster and discarded the rest; the current source drains a full window. Bluetooth counts from those sessions are low.</li>
+  <li><b>${QC.header_only} of ${QC.csv_files} files are header-only,</b> a larger share than the T-Deck's.</li></ul>`);
+  sec.append(table(['File','Date','Time','Rows','What was written'],QC.bad_coord_events.map(e=>[mono(e.file),mono(e.day),e.time,e.rows,e.kind]),[3],[4]));
   sec.append(el('h3','sh','The firmware fault behind the recovered rows'));
-  P(sec,`<p>Builds that ran from March 28 to May 15 lost Bluetooth addresses in a specific way: when a device's name was 16 characters or longer, the name landed in the address column. Shorter names were unaffected. That pattern fits a pointer to a temporary string being reused after the string was freed: a 17-character address and a long name both need heap storage, and the name took over the address's slot. The first build also did the reverse on ${fmt(Q.name_lost)} rows, writing the address where the name belongs. Builds from May 16 on are clean.</p>
+  P(sec,`<p>T-Deck builds that ran from March 28 to May 15 lost Bluetooth addresses in a specific way: when a device's name was 16 characters or longer, the name landed in the address column. Shorter names were unaffected. That pattern fits a pointer to a temporary string being reused after the string was freed: a 17-character address and a long name both need heap storage, and the name took over the address's slot. The first build also did the reverse on ${fmt(Q.name_lost)} rows, writing the address where the name belongs. Builds from May 16 on are clean.</p>
   <p>The recovered rows have no address, so they are tracked by name. For a Tesla or a Lime vehicle the name is unique to one unit, and those join cleanly with later sightings of the same unit. For everything else the name is a product name shared by many units, so those rows count toward totals but not toward device-by-device analysis.</p>`);
 
   sec.append(el('h3','sh','GPS: three checks'));
@@ -1431,8 +1495,13 @@ async function viewMethod(){
 
   sec.append(el('h3','sh','Caveats'));
   sec.append(el('ul','clean',
-    '<li><b>2.4 GHz only.</b> The T-Deck hears Wi-Fi channels 1\u201314. Networks that exist only on 5 GHz or 6 GHz are absent.</li>'+
-    '<li><b>Bluetooth 31-per-scan cap.</b> The firmware records at most 31 advertisements per scan. '+pct(Q.ble_scans_at_cap,Q.ble_scans)+'% of '+fmt(Q.ble_scans)+' scans hit it, so in a crowd it under-counts. Bluetooth totals are a floor.</li>'+
+    '<li><b>2.4 GHz only.</b> Both recorders hear Wi-Fi channels 1\u201314. Networks that exist only on 5 GHz or 6 GHz are absent.</li>'+
+    '<li><b>Two recorders, several builds.</b> The Cardputer reads signals 7 to 9 dB stronger and scans Wi-Fi every 4 seconds. The T-Deck scanned every 12 seconds in March, every 8 until May 19 and every 4 to 5 since. A day\'s device count depends on which unit and which build was running, so day-to-day totals are not comparable across those changes. Shares and per-device findings are.</li>'+
+    '<li><b>No ground truth.</b> Nothing here establishes which recorder is more accurate, in position or in signal strength. The two agree with each other; the Two recorders tab lists what the logs can and cannot show.</li>'+
+    '<li><b>Wi-Fi cap on the Cardputer.</b> A deliberate memory limit: it keeps the 24 strongest networks per scan; '+pct(CP.caps.C_wifi.at_cap,CP.caps.C_wifi.scans)+'% of its scans hit that. The T-Deck has logged up to '+CP.caps.T_wifi.max_per_scan+' in one scan.</li>'+
+    '<li><b>Bluetooth 31-per-scan cap.</b> Both firmwares record at most 31 advertisements per scan. '+pct(Q.ble_scans_at_cap,Q.ble_scans)+'% of '+fmt(Q.ble_scans)+' scans hit it, so in a crowd it under-counts. Bluetooth totals are a floor.</li>'+
+    '<li><b>Names on the Cardputer.</b> Its Bluetooth scan is passive, so it misses every name sent in a scan response. Tesla and some Lime names are among them. Where the T-Deck has seen the same address with a name, the Cardputer\'s row takes that name.</li>'+
+    '<li><b>"Travelled with you" on the Transit tab</b> means heard continuously while the car covered 800 m or more (400 m for Bluetooth). Home routers were heard that far in '+TR.thresholds.router_control.over_800+' of '+fmt(TR.thresholds.router_control.runs)+' passes.</li>'+
     '<li><b>Random addresses.</b> Most phones and many wearables change Bluetooth address every few minutes, so one device appears as many. Following such a device across days by address is impossible by design.</li>'+
     '<li><b>Vendor names.</b> A maker is assigned only when the address falls in a registered block. A random Bluetooth address can land in a registered block by chance; across this dataset that is on the order of a thousand addresses, about ten of them in Espressif blocks.</li>'+
     '<li><b>Security labels</b> changed between firmware builds; the Report\'s Wi-Fi section says which figures rest on which sessions.</li>'+
@@ -1443,16 +1512,275 @@ async function viewMethod(){
   sec.append(footer());stage.append(sec);
 }
 
-function mapLink(txt){const p=el('p');const a=el('a',null,txt);a.href='#map';a.style.cssText='font-family:var(--disp);font-weight:600;font-size:13px';p.style.marginTop='14px';p.append(a);return p;}
-function footer(){return el('footer',null,'Pisces Moon Signals Atlas \u00b7 version 5, a full re-run from the raw files \u00b7 built from 83 wardrive sessions recorded on the T-Deck Plus, Mar\u2013Nov 2026 \u00b7 Wi-Fi and Bluetooth separated by type \u00b7 geography limited to California & Oregon \u00b7 personal names redacted for display'+(LOCAL?' \u00b7 street map \u00a9 OpenStreetMap contributors':'')+'. Device locations are strength-weighted estimates, not exact positions.');}
+/* ---------- two-series helpers (recorder comparisons) ---------- */
+function legendRow(items){return '<div class="lg">'+items.map(i=>`<span><i style="background:${cssv(i.tok)}"></i>${i.name}</span>`).join('')+'</div>';}
+/* lines on one axis: rows [{k,...}], series [{key,name,tok}]; end labels are nudged apart when they would collide */
+function svgLines(rows,series,{h=200,unit='',label=(k,i)=>k,max=null,breaks=[],at='end'}={}){
+  const n=rows.length,pad=40,top=14,bot=22,right=104,w=Math.max(560,Math.min(940,n*13+pad+right));
+  const mx=max||niceMax(Math.max(1,...rows.flatMap(r=>series.map(s=>r[s.key]||0)))),ph=h-top-bot,pw=w-pad-right;
+  const X=i=>pad+(n>1?pw*i/(n-1):pw/2),Y=v=>top+ph*(1-Math.min(v,mx)/mx);
+  let s=`<svg class="spark" style="max-width:${Math.round(w*1.3)}px" viewBox="0 0 ${w} ${h}" role="img" aria-label="line chart">`;
+  for(let g=0;g<=2;g++){const y=top+ph*(1-g/2);
+    s+=`<line x1="${pad}" y1="${y}" x2="${w-right}" y2="${y}" stroke="${cssv('--line')}" stroke-width="1"/>`;
+    s+=`<text x="${pad-5}" y="${y+3.5}" text-anchor="end" font-size="10" font-family="var(--mono)" fill="${cssv('--ink3')}">${compact(mx*g/2)}</text>`;}
+  breaks.forEach(i=>{const x=(X(i-1)+X(i))/2;s+=`<line x1="${x}" y1="${top}" x2="${x}" y2="${top+ph}" stroke="${cssv('--ink3')}" stroke-width="1" stroke-dasharray="3 3"/>`;});
+  rows.forEach((r,i)=>{const lb=label(r.k,i);if(lb!=='')s+=`<text x="${X(i).toFixed(1)}" y="${h-5}" text-anchor="middle" font-size="10.5" font-family="var(--mono)" fill="${cssv('--ink2')}">${lb}</text>`;});
+  const ends=[];
+  series.forEach(se=>{const c=cssv(se.tok);let d='',pen=false,last=null;
+    rows.forEach((r,i)=>{const v=r[se.key];if(v==null||breaks.includes(i)){pen=false;}if(v==null)return;d+=(pen?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1);pen=true;last=[X(i),Y(v)];});
+    s+=`<path d="${d}" fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+    if(at==='peak'){let bi=0;rows.forEach((r,i)=>{if((r[se.key]||0)>(rows[bi][se.key]||0))bi=i;});last=[X(bi),Y(rows[bi][se.key]||0)];}
+    if(last){s+=`<circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="4" fill="${c}" stroke="${cssv('--panel')}" stroke-width="2"/>`;ends.push({x:last[0],y:last[1],name:se.name});}});
+  if(at==='peak'){ends.sort((a,b)=>a.x-b.x);ends.forEach((e,i)=>{const left=i===0&&ends.length>1;s+=`<text x="${(e.x+(left?-9:9)).toFixed(1)}" y="${(e.y-4).toFixed(1)}" text-anchor="${left?'end':'start'}" font-size="11" font-family="var(--sans)" fill="${cssv('--ink')}">${e.name}</text>`;});}
+  else{ends.sort((a,b)=>a.y-b.y);for(let i=1;i<ends.length;i++)if(ends[i].y-ends[i-1].y<13)ends[i].y=ends[i-1].y+13;
+  ends.forEach(e=>{s+=`<text x="${(e.x+9).toFixed(1)}" y="${(e.y+3.5).toFixed(1)}" font-size="11" font-family="var(--sans)" fill="${cssv('--ink')}">${e.name}</text>`;});}
+  series.forEach(se=>rows.forEach((r,i)=>{if(r[se.key]==null)return;s+=`<circle cx="${X(i).toFixed(1)}" cy="${Y(r[se.key]).toFixed(1)}" r="7" fill="transparent"><title>${r.k} \u00b7 ${se.name}: ${fmt(r[se.key])}${unit}</title></circle>`;}));
+  return s+'</svg>';
+}
+/* one bar split into shares, with the shares labeled underneath */
+function splitBar(title,parts){const tot=parts.reduce((a,p)=>a+p.v,0)||1;
+  return `<div class="splith">${title}</div><div class="split">`+parts.map(p=>`<span style="flex:${p.v} 1 0;background:${cssv(p.tok)}" title="${p.name}: ${fmt(p.v)} (${Math.round(100*p.v/tot)}%)"></span>`).join('')+'</div><div class="splitl">'+parts.map(p=>`<span><i style="background:${cssv(p.tok)}"></i>${p.name} <b>${Math.round(100*p.v/tot)}%</b> <em>${fmt(p.v)}</em></span>`).join('')+'</div>';}
+const DEVS=[{key:'t',name:'T-Deck Plus',tok:'--dev-t'},{key:'c',name:'Cardputer',tok:'--dev-c'}];
+const andList=a=>a.length<2?a.join(''):a.slice(0,-1).join(', ')+' and '+a[a.length-1];
+const more=(c,t)=>{const r=Math.round(100*(c/t-1));return r>=0?r+'% more':Math.abs(r)+'% fewer';};
+
+/* ================= TWO RECORDERS ================= */
+async function viewDevices(){
+  const [CP,S,R,RD,TR]=await Promise.all([J('compare.json'),J('summary.json'),J('report.json'),J('riders.json'),J('transit.json')]);
+  const BD=S.totals.by_device,SHR=CP.shared,OV=CP.overlap.road,RS=CP.rssi,NM=CP.names,VR=CP.volume.road,QC=CP.quality_c,d19=CP.by_day[0],d31=CP.by_day[CP.by_day.length-1];
+  const sec=el('section');
+  sec.append(el('div','eyebrow','T-Deck Plus and Cardputer \u00b7 side by side'));
+  sec.append(el('h2','vh','Two recorders, one car'));
+  sec.append(el('p','lead','On '+SHR.road.days.map(longDate).join(' and ')+' both units were logging in the same car. For the '+SHR.road.mins+' minutes the car was moving ('+fmt(SHR.road.km)+' km) they heard the same streets at the same moment, so every difference between the two logs comes from the recorders. Their GPS fixes agreed to a median of '+CP.gps.med_m+' m.'));
+  sec.append(tiles([[ '+'+Math.round(RS.road.WIFI.diff_med)+' dB','Cardputer reads stronger','same Wi-Fi transmitter, same minute'],[pct(OV.WIFI.both,OV.WIFI.total)+'%','of Wi-Fi networks heard by both',fmt(OV.WIFI.total)+' heard by at least one'],
+    [NM.tesla_t+' / '+NM.tesla_c,'Teslas named','T-Deck / Cardputer, same drives'],[CP.caps.C_wifi.max_per_scan,'Wi-Fi networks per scan, at most','on the Cardputer; the T-Deck has logged '+CP.caps.T_wifi.max_per_scan],
+    [fmt(BD.C.rows),'Cardputer rows',BD.C.files+' sessions on '+BD.C.days+' days'],[fmt(BD.T.rows),'T-Deck Plus rows',BD.T.files+' sessions on '+BD.T.days+' days']]));
+
+  sec.append(el('h3','sh','The whole record, by recorder'));
+  sec.append(table(['','T-Deck Plus','Cardputer'],[
+    ['Sessions with data',BD.T.files,BD.C.files],['Files that held only a header',BD.T.empty_files+' of '+BD.T.source_files,BD.C.empty_files+' of '+BD.C.source_files],
+    ['Days with data',BD.T.days,BD.C.days],['First and last day',longDate(BD.T.first)+' \u2013 '+longDate(BD.T.last),longDate(BD.C.first)+' \u2013 '+longDate(BD.C.last)],
+    ['Rows',fmt(BD.T.rows),fmt(BD.C.rows)],['Wi-Fi networks',fmt(BD.T.wifi_devices),fmt(BD.C.wifi_devices)],['Bluetooth addresses',fmt(BD.T.ble_devices),fmt(BD.C.ble_devices)],
+    ['Track used for distance',fmt(CP.track.t_km)+' km',fmt(CP.track.c_extra_km)+' km the T-Deck missed']],[1,2]));
+  P(sec,`<p>The Cardputer is the smaller record: nine days in May and June, against the T-Deck's ${BD.T.days}. It matters most where it stands alone. ${andList(R.driving.cardputer_only_drive_days.map(longDate))} were driven with only the Cardputer logging, and ${fmt(CP.c_only.reduce((a,x)=>a+x.mins,0))} of its minutes have no T-Deck log beside them.</p>`);
+
+  sec.append(el('h3','sh','Same car, same minutes'));
+  P(sec,`<p>The two shared days are not the same test, because the T-Deck's own firmware changed between them. On ${longDate(d19.day)} it was still sweeping Wi-Fi every ${d19.wifi.t_cadence} seconds; by ${longDate(d31.day)} it swept every ${d31.wifi.t_cadence}. The Cardputer swept every ${d19.wifi.c_cadence} on both.</p>`);
+  sec.append(table(['Day','Moving','T-Deck sweep','Wi-Fi: T-Deck','Cardputer','Difference','Bluetooth: T-Deck','Cardputer','Difference'],
+    CP.by_day.map(d=>[mono(d.day.slice(5)),d.mins+' min','every '+d.wifi.t_cadence+' s',fmt(d.wifi.t),fmt(d.wifi.c),more(d.wifi.c,d.wifi.t),fmt(d.ble.t),fmt(d.ble.c),more(d.ble.c,d.ble.t)]),[1,3,4,5,6,7,8]));
+  P(sec,`<p><b>Most of the first day's gap was the T-Deck's slow sweep.</b> With the T-Deck sweeping half as often, the Cardputer logged ${more(d19.wifi.c,d19.wifi.t)} Wi-Fi networks and ${more(d19.ble.c,d19.ble.t)} Bluetooth addresses. Once the T-Deck's sweep sped up, the Wi-Fi gap fell to ${more(d31.wifi.c,d31.wifi.t).replace(' more','')} and the Bluetooth gap closed. What remains on Wi-Fi is the Cardputer's stronger reception.</p>`);
+  const ser=CP.series,brk=[];for(let i=1;i<ser.length;i++)if(ser[i].day!==ser[i-1].day)brk.push(i);
+  const fg=chart('Wi-Fi networks heard in each five minutes','Distinct addresses, moving minutes only, both recorders in the same car',legendRow(DEVS)+svgLines(ser.map(x=>({k:x.t,t:x.tw,c:x.cw})),DEVS,{unit:' networks',breaks:brk,label:(k,i)=>(i===0||brk.includes(i))?k.slice(0,5).replace('-','/'):(i%6===0?k.slice(6):'')}),
+    'The dashed line separates the two days. The Cardputer leads throughout '+longDate(d19.day)+'; on '+longDate(d31.day)+' the two run close together.');
+  sec.append(fg);
+
+  sec.append(el('h3','sh','Who heard what'));
+  const sp=el('div','card');
+  sp.innerHTML=splitBar('Wi-Fi networks ('+fmt(OV.WIFI.total)+' heard while moving)',[{name:'T-Deck only',v:OV.WIFI.only_t,tok:'--dev-t'},{name:'both',v:OV.WIFI.both,tok:'--ink3'},{name:'Cardputer only',v:OV.WIFI.only_c,tok:'--dev-c'}])
+    +splitBar('Bluetooth addresses ('+fmt(OV.BLE.total)+')',[{name:'T-Deck only',v:OV.BLE.only_t,tok:'--dev-t'},{name:'both',v:OV.BLE.both,tok:'--ink3'},{name:'Cardputer only',v:OV.BLE.only_c,tok:'--dev-c'}]);
+  sec.append(sp);
+  P(sec,`<p><b>Neither recorder hears everything the other does.</b> Only ${pct(OV.WIFI.both,OV.WIFI.total)}% of the Wi-Fi networks and ${pct(OV.BLE.both,OV.BLE.total)}% of the Bluetooth addresses were in both logs. What one unit missed was mostly weak and brief: ${OV.WIFI.once_only_t}% of the networks only the T-Deck heard appear in its log exactly once, at a typical ${OV.WIFI.rssi_only_t} dBm, and ${OV.WIFI.once_only_c}% of the Cardputer's extras appear once, at ${OV.WIFI.rssi_only_c} dBm. A passing car catches a distant network for one sweep or not at all, and the two units sweep at different instants.</p>
+  <p>So any single wardrive undercounts. On these streets one recorder logged between ${pct(VR.T.wifi_addr,OV.WIFI.total)}% and ${pct(VR.C.wifi_addr,OV.WIFI.total)}% of the networks the pair found together.</p>`);
+
+  sec.append(el('h3','sh','Signal strength'));
+  const two=el('div','two');
+  const hk=[...new Set([...CP.hist.T_wifi.map(x=>x[0]),...CP.hist.C_wifi.map(x=>x[0])])].sort((a,b)=>a-b),hT=Object.fromEntries(CP.hist.T_wifi),hC=Object.fromEntries(CP.hist.C_wifi),sT=CP.hist.T_wifi.reduce((a,x)=>a+x[1],0),sC=CP.hist.C_wifi.reduce((a,x)=>a+x[1],0);
+  two.append(chart('Wi-Fi signal readings on the shared drives','Share of each recorder\'s rows, by strength in dBm',legendRow(DEVS)+svgLines(hk.map(k=>({k:k+' dBm',t:+(100*(hT[k]||0)/sT).toFixed(1),c:+(100*(hC[k]||0)/sC).toFixed(1)})),DEVS,{unit:'%',at:'peak',label:(k,i)=>i%3===0?k.replace(' dBm',''):''}),
+    'The Cardputer\'s readings sit to the right: median '+CP.rssi_median.C_wifi+' dBm against the T-Deck\'s '+CP.rssi_median.T_wifi+'.'));
+  const tb=el('div');tb.append(table(['Same transmitter, same minute','Pairs','Cardputer reads'],[['Wi-Fi, moving',fmt(RS.road.WIFI.pairs),'+'+RS.road.WIFI.diff_med+' dB'],['Wi-Fi, parked',fmt(RS.stand.WIFI.pairs),'+'+RS.stand.WIFI.diff_med+' dB'],['Wi-Fi, at home',fmt(RS.home.WIFI.pairs),'+'+RS.home.WIFI.diff_med+' dB'],
+    ['Bluetooth, moving',fmt(RS.road.BLE.pairs),'+'+RS.road.BLE.diff_med+' dB'],['Bluetooth, parked',fmt(RS.stand.BLE.pairs),'+'+RS.stand.BLE.diff_med+' dB'],['Bluetooth, at home',fmt(RS.home.BLE.pairs),'+'+RS.home.BLE.diff_med+' dB']],[1,2]));
+  two.append(tb);sec.append(two);
+  P(sec,`<p>When both units heard the same transmitter in the same minute, the Cardputer's reading was higher by a median <b>${RS.road.WIFI.diff_med} dB on Wi-Fi and ${RS.road.BLE.diff_med} dB on Bluetooth</b>. The gap is the same moving, parked and at home, on both days, which points to the radios and antennas and not to where each unit happened to sit. For signals well clear of the noise floor it is about ${Math.max(...CP.rssi_band.map(b=>b.diff))} dB. In open air ${Math.round(RS.road.WIFI.diff_med)} dB is about ${(10**(RS.road.WIFI.diff_med/20)).toFixed(1)} times the range, and ${Math.round(RS.road.BLE.diff_med)} dB is about ${(10**(RS.road.BLE.diff_med/20)).toFixed(1)} times.</p>
+  <p>Two consequences. Signal-strength thresholds don't transfer between the units: the riders estimate uses \u221266 dBm on the T-Deck and \u221259 on the Cardputer, the Bluetooth gap measured parked and at home. And a strength-weighted position from the Cardputer leans on a wider circle of sightings.</p>`);
+
+  sec.append(el('h3','sh','What each one can and can\'t do'));
+  sec.append(table(['','T-Deck Plus','Cardputer'],[
+    ['Wi-Fi networks kept per sweep','no limit seen (up to '+CP.caps.T_wifi.max_per_scan+')','the '+CP.caps.C_wifi.max_per_scan+' strongest; '+VR.C.wifi_at24_pct+'% of sweeps on the shared drives hit that'],
+    ['Bluetooth rows kept per scan','31 at most','31 at most; 8 in its last three files, while its memory limits were being tuned'],
+    ['Bluetooth scan','active: asks each device for its scan response','passive: listens only'],
+    ['Teslas named on the shared drives',NM.tesla_t,NM.tesla_c+' (it heard '+NM.tesla_addr_heard_by_c+' of the same cars, unnamed)'],
+    ['Lime scooters named',NM.lime_t,NM.lime_c],
+    ['Bluetooth addresses that came with a name',NM.ble_named_pct_t+'%',NM.ble_named_pct_c+'%'],
+    ['Wi-Fi security label','open or not; the protocol in five sessions','open or not'],
+    ['Hidden networks among those heard',NM.wifi_hidden_pct_t+'%',NM.wifi_hidden_pct_c+'%'],
+    ['Transmits while scanning','Wi-Fi probes and Bluetooth scan requests','Wi-Fi probes only']],[],[1,2]));
+  P(sec,`<p><b>Names are the T-Deck's advantage.</b> A Tesla puts its name in the scan response, which only an active scanner asks for. On the shared drives the T-Deck named ${NM.tesla_t} Teslas and the Cardputer none, though the Cardputer heard ${NM.tesla_addr_heard_by_c} of those same cars as anonymous addresses. Of the Bluetooth addresses both units heard, ${fmt(NM.common_named_t_only)} carry a name only in the T-Deck's log and ${NM.common_named_c_only} only in the Cardputer's.</p>
+  <p><b>Reach is the Cardputer's.</b> It hears farther and sweeps faster.</p>
+  <p><b>Its limits are deliberate.</b> The Cardputer has no PSRAM, and a dense block can deliver more results than its memory holds. The caps were tuned over these weeks to stop it overrunning its buffers and crashing. Keeping the 24 strongest networks has an upside too: what it writes in a dense block is the near field, the sightings that place a network best. What it drops is the far end of the street.</p>
+  <p><b>The firmware source says the same thing the logs do.</b> The Cardputer build sets <code>CP_SCAN_MAX_APS = 24</code> and <code>setActiveScan(false)</code>; the T-Deck build scans Bluetooth actively. Both start Wi-Fi scans in the default active mode, so both send probe requests. The 8-row Bluetooth limit in the last three Cardputer files is one step in that tuning, and the source's notes record it: that build drained 8 rows every 5 seconds from a queue that filled much faster, and the current source drains a full window.</p>`);
+
+
+  sec.append(el('h3','sh','Which one is more accurate?'));
+  const G=CP.gps,RST=G.rest||[],DG=G.disagree||[],med=a=>{const b=a.slice().sort((x,y)=>x-y);return b.length?b[Math.floor(b.length/2)]:0;};
+  P(sec,`<p><b>The logs can't say, and this is how far they go.</b> Accuracy needs a reference neither recorder carries: a surveyed position for the GPS, a calibrated source for signal strength. Short of that:</p>
+  <ul><li><b>The two GPS units agree with each other.</b> Same second, same car: a median ${G.med_m} m apart, ${G.p95_m} m at the 95th percentile. That shows they are consistent, not that either is right.</li>
+  ${RST.length?`<li><b>At rest, the T-Deck's fix is the tighter one.</b> Over ${RST.length} spells where both sat still in the same place (${RST.reduce((a,x)=>a+x.mins,0)} minutes, all at home), the T-Deck's fixes scattered a typical ${med(RST.map(x=>x.t_med))} m around their own center and the Cardputer's ${med(RST.map(x=>x.c_med))} m, with the Cardputer wandering as far as ${Math.max(...RST.map(x=>x.c_max))} m. Tight is not the same as true: the T-Deck firmware keeps writing its last position when it loses lock, and that looks perfectly steady in a log.</li>`:''}
+  ${DG.length?`<li><b>One night they disagreed, and the radios say neither had moved.</b> ${DG.map(d=>'On '+longDate(d.day)+' from '+d.start+' the fixes sat '+d.metres+' m apart for '+d.mins+' minutes while both units heard the same strong Bluetooth signals ('+d.shared_strong+' of '+Math.max(d.t_strong,d.c_strong)+')').join('. ')}. Against where both units put that spot the rest of the time, the T-Deck was ${andList(DG.map(d=>d.t_off_m+' m'))} off and the Cardputer ${andList(DG.map(d=>d.c_off_m+' m'))}. That is indoors, on one night.</li>`:''}
+  <li><b>Over the whole record the T-Deck has more flagged positions,</b> ${G.flagged.T.pct}% of its rows against the Cardputer's ${G.flagged.C.pct}%. It also logged on ${BD.T.days} days to the Cardputer's ${BD.C.days}, including a two-hour indoor drift on April 8, so that compares exposure as much as hardware.</li>
+  <li><b>Satellite counts aren't in the files.</b> Neither log records satellites in view or dilution of precision, and the accuracy column holds only ${andList(G.accuracy_field.C.slice().sort((a,b)=>a-b))} on both units. The Cardputer's receiver tracks more satellites than the T-Deck's (up to 30 against 12), which should help it, but nothing here can show that it did.</li>
+  <li><b>Signal strength: the gap says the units differ, not which is right.</b> Neither radio is calibrated. The Cardputer's cap also changes what its positions are built from, so its network placements and the T-Deck's are not the same measurement.</li></ul>
+  <p><b>What would settle it.</b> Log satellites and HDOP on both units. Park both for ten minutes under open sky on a point with known coordinates. For the radios, read one fixed access point from a measured distance with both.</p>`);
+  sec.append(el('h3','sh','Each covering for the other'));
+  const AP=CP.gps.apart||[];
+  P(sec,`<p><b>The T-Deck's address book names the Cardputer's cars.</b> A Tesla's Bluetooth address doesn't change, and across the T-Deck's logs every one of the ${fmt(R.vehicles.teslas)} Tesla names maps to one address. Applying that to the Cardputer's rows names ${fmt(NM.tesla_addr_c_all)} Teslas it heard. That is how the car you drove on ${andList(R.shift.cardputer_only_days.map(longDate))} is identified with no T-Deck running. The same trick lifts the Cardputer's Lime count from ${fmt(TR.lime.named_by_c)} named to ${fmt(TR.lime.c_only+TR.lime.both)} identified.</p>
+  <p><b>The cabin count agrees across units.</b> The riders estimate counts strong Bluetooth signals in the car. Run separately on each recorder for the shifts both logged, with the Cardputer's threshold moved by the 7 dB it reads high on Bluetooth, the two say "rider aboard" or "no rider" for the same minute ${RD.xdev.map(x=>x.agree_pct+'% of the time on '+longDate(x.day)+' ('+x.minutes+' minutes)').join(' and ')}.</p>
+  ${AP.length?`<p><b>And ${AP.length===1?'once':AP.length===2?'twice':AP.length+' times'} they were apart.</b> ${AP.map(a=>'On '+longDate(a.day)+' from '+a.start+' to '+a.end+' the two fixes sat a steady '+a.metres+' m apart while the car was parked, and the units shared '+(a.shared_strong===0?'not one':a.shared_strong)+' steady strong Bluetooth signal: the T-Deck had '+a.t_strong+' around it, the Cardputer '+a.c_strong).join('. ')}. The Cardputer had left with you. Those ${AP.reduce((x,a)=>x+a.mins,0)} minutes are kept out of every side-by-side figure on this tab, and they line up with the breaks the Report infers from the T-Deck's Bluetooth alone (an empty cabin for ${andList((RD.lunch_two_ways||[]).map(l=>l.cabin_min+' minutes from '+l.cabin_start+' on '+longDate(l.day)))}).</p>`:''}`);
+
+  sec.append(el('h3','sh','The Cardputer\'s sessions'));
+  sec.append(el('p','lead','Every Cardputer file with data. "Bluetooth named" is the share of Bluetooth rows that came with a name; it is zero at home, where the neighbors\' devices keep their names in the scan response.'));
+  sec.append(table(['File','Date','Time','Minutes','Rows','Wi-Fi','Bluetooth','Bluetooth named','Most Wi-Fi in a sweep','Most Bluetooth in a scan','Bad coordinates'],
+    CP.cardputer_files.map(f=>[mono(f.file.replace('wardrive_','')),mono(f.day),f.start+'\u2013'+f.end,f.mins,fmt(f.rows),fmt(f.wifi),fmt(f.ble),f.ble_named_pct+'%',f.wifi_max==null?'':f.wifi_max,f.ble_max,f.bad_coord||'']),[3,4,5,6,7,8,9,10]));
+  sec.append(el('div','note','<b>Data problems, all handled.</b> '+QC.bad_coord_rows+' rows in '+QC.bad_coord_events.length+' scans carry a corrupted coordinate and lost their position. '+QC.time_island_rows+' rows had a timestamp about 14 hours off and took the time of the row before. One minute ('+QC.drift_rows+' rows) had a fix that disagreed with the transmitters in range. From June 2 at 12:43 the firmware kept only 8 Bluetooth rows per scan, one step in tuning its memory limits; the current source keeps a full window. Details are on the Method tab.'));
+
+  sec.append(el('h3','sh','What this means for the rest of the atlas'));
+  sec.append(el('ul','clean','<li><b>Counts per day are not comparable across recorders or builds.</b> The Cardputer days read high, and so do T-Deck days after May 19, when its Wi-Fi sweep doubled in speed. Shares, per-device findings and the threat search don\'t depend on it.</li>'+
+    '<li><b>Distance uses one track.</b> Where both logged, the T-Deck\'s fixes are used, so no kilometer counts twice.</li>'+
+    '<li><b>Positions pool both.</b> A device heard by both units sits at the strength-weighted center of all its sightings.</li>'+
+    '<li><b>Neither unit is treated as the reference for accuracy.</b> The T-Deck\'s track is used where both logged only because it covers more of each shift.</li>'+
+    '<li><b>The comparison rests on two days.</b> '+SHR.road.mins+' moving minutes are enough to measure a 7 to 9 dB offset; they are not enough to say how the units compare in rain, at night or mounted somewhere else in the car.</li>'));
+  sec.append(footer());stage.append(sec);
+}
+
+/* ================= TRANSIT ================= */
+async function viewTransit(){
+  const [TR,S,R,TW]=await Promise.all([J('transit.json'),J('summary.json'),J('report.json'),J('tower.json')]);
+  const A=TR.alto,LM=TR.lime,W=TR.where,cat=k=>TR.cats.find(c=>c.key===k),fam=(k,n)=>(cat(k).fams.find(f=>f.fam.indexOf(n)>=0)||{n:0,multi_day:0,movers:0,along:0});
+  const sec=el('section');
+  sec.append(el('div','eyebrow','Transit, fleets and other ways around'));
+  sec.append(el('h2','vh','Who else is on the road, by name'));
+  sec.append(el('p','lead','Some vehicles announce what they are: a fleet gateway with the company\'s name, a scooter with its number, a bus with its passenger Wi-Fi. This tab counts them, shows where each was met, and separates the ones that only passed from the ones that came back or kept pace. It also follows the other cars from your own fleet when you meet them away from the yard. Police and plate-reader equipment is not here.'));
+  sec.append(tiles([[fmt(A.cars),'Alto cars',A.repeat.cars+' met on more than one day'],[fmt(TW.cars_met),'other Tower cars met in the field','of '+TW.fleet+' known from the yard'],[fmt(LM.scooters),'Lime scooters and e-bikes',fmt(cat('micro').multi_day)+' scooters of all kinds seen on 2+ days'],
+    [fam('ride','Uber Beacon').n+' + '+fam('ride','Lyft Amp').n,'Uber and Lyft lights','plus '+cat('taxi').n+' taxis and limos'],[fmt(cat('bus').n),'bus, coach and rail radios',fam('bus','LADOT').n+' LADOT, '+fam('bus','Metro Rail').n+' Metro Rail'],
+    [fmt(cat('tele').n),'commercial fleet trackers','Samsara, Motive, Netradyne'],[fmt(cat('dash').n),'dashcams','brand known, owner not']]));
+  const rows=TR.cats.map(c=>[c.label+(c.mappable?'':' <span class="tag">counted only</span>'),fmt(c.n),fmt(c.t_only),fmt(c.c_only),fmt(c.both),fmt(c.multi_day),fmt(c.movers),c.along?fmt(c.along):'']);
+  sec.append(table(['Group','Devices','T-Deck only','Cardputer only','Both','Heard on 2+ days','Seen 500 m+ apart','Travelled with you'],rows,[1,2,3,4,5,6,7]));
+  sec.append(el('div','note','<b>Reading the table.</b> A device is one address, or one vehicle number for Lime. "Seen 500 m+ apart" means it was heard in places that far apart at any time, so it is on something that moves. "Travelled with you" is stricter: heard continuously while your car covered 800 m or more (400 m for Bluetooth). Home routers managed that in '+TR.thresholds.router_control.over_800+' of '+fmt(TR.thresholds.router_control.runs)+' passes, so it marks a vehicle in the same stream of traffic.'));
+
+  // Alto
+  sec.append(el('h3','sh','Alto'));
+  P(sec,`<p><b>${fmt(A.cars)} Alto cars.</b> Each carries a Samsara gateway broadcasting the same network name, "RIDEALTO" spelled out in hex, on channel 6. Each gateway has its own address, so each address is one car. The T-Deck heard ${fmt(A.t_only+A.both)}; the Cardputer heard ${A.both+A.c_only}, ${A.c_only} of them cars the T-Deck never caught. They were met on ${A.days} days between ${longDate(A.first)} and ${longDate(A.last)}.</p>
+  <p><b>They pass.</b> ${A.minutes_heard.one_minute} of the ${A.cars} were in range for a single minute, at a typical peak of ${A.rssi_med} dBm: a car going the other way. Only ${A.along_n[0]} times did one stay in range while you covered 800 m or more${A.along.length?' ('+A.along.map(x=>longDate(x.day)+', '+x.km+' km from '+x.frm).join('; ')+')':''}. On ${A.together.mins2} separate minutes two or more Alto cars were in range at once, and never more than ${A.together.most}.</p>`);
+  const two=el('div','two');
+  two.append(chart('Alto cars met per day','Distinct cars',svgBars(A.per_day.map(d=>({k:d.day.slice(5),v:d.cars})),{unit:' cars',label:(k,i)=>i%3===0?k:''}),
+    'The rise from mid-May is at least partly the equipment: the T-Deck\'s Wi-Fi sweep doubled in speed after May 19 and the Cardputer was running on some of these days. It is not evidence the fleet grew.'));
+  const hb=el('div');hb.append(table(['Where Alto cars were met most','Cars','Days'],A.hubs.slice(0,10).map(h=>[h.name,h.cars,h.days]),[1,2]));two.append(hb);
+  sec.append(two);
+  P(sec,`<p><b>Where.</b> The airport is the one real gathering point: ${A.hubs[0].cars} different Alto cars on ${A.hubs[0].days} days at the ${A.hubs[0].name}. After that come ${A.hubs.slice(1,4).map(h=>h.name+' ('+h.cars+')').join(', ')}. Only ${A.in_hubs} of the ${A.meetings} meetings happened at one of these ${A.hub_count} places; the rest are scattered along your routes, one car at a time.</p>
+  <p><b>The ${A.repeat.cars} met more than once, and what they have in common.</b> Not a place. Only <b>${A.repeat.same_500}</b> were met within 500 m of an earlier meeting and ${A.repeat.same_1500} within 1.5 km. ${A.repeat.never_within_5km} were never met within 5 km of where they had been before; the typical distance between a car's closest two meetings is ${A.repeat.near_median_km} km, with ${A.repeat.span_median_days} days between first and last. At the airport, ${A.hubs[0].cars} cars over ${A.hubs[0].days} days and not one of them twice. What the repeats share is the territory: these cars circulate through the same Westside, airport, Hollywood and downtown streets you do, and you cross paths with a different slice of the fleet each time.</p>
+  <p><b>That gives a fleet size.</b> ${A.by_days[0].cars} cars were met on one day and ${A.by_days[1].cars} on two. If meetings were random, that ratio puts the fleet working these areas at about <b>${fmt(A.chao1)} cars or more</b>. It is a floor: cars that work other areas or other hours are less likely to be met at all.</p>`);
+  sec.append(table(['Car (end of address)','Days met','First','Last','Closest two meetings','Farthest two','Where, in order'],A.top_repeat.slice(0,12).map(c=>[mono('\u2026'+c.tag),c.days,mono(c.first.slice(5)),mono(c.last.slice(5)),c.near_km+' km',c.far_km+' km',c.places.map(p=>p.area).join(' \u2192 ')]),[1,4,5],[6]));
+  sec.append(el('div','note','<b>On the map.</b> Turn on "Alto cars" (and "Other Tower cars" to see the two fleets together) and click one: the map draws a line through every place that car was met, in date order. Positions are where you were when the car\'s signal peaked, which for a passing car is within a block or two of the car.'));
+
+
+  // Tower: the user's own fleet, met in the field
+  sec.append(el('h3','sh','Tower: other cars from your fleet, out in the field'));
+  const WA=TW.with_alto['500m_10min'],WB=TW.with_alto['1000m_15min'],HR=TW.hour_rate,hr=h=>HR.find(x=>x.hour===h)||{tower_per_h:0,alto_per_h:0},OV=TW.overall;
+  const mid=HR.filter(x=>x.hour>=10&&x.hour<=16).map(x=>x.tower_per_h),lax=TW.areas.find(a=>a.area==='LAX')||TW.areas[0];
+  P(sec,`<p><b>Yes. You cross another Tower car about once every ${(1/OV.tower_per_h).toFixed(1)} hours of driving.</b> A Tower car here is a Tesla heard at the Mission Road yard on two or more days: ${TW.fleet} cars. More than 1.5 km from the yard and from home, <b>${TW.cars_met} of them were met on ${TW.days} days</b>, ${TW.meetings} meetings in all, not counting the car you were driving. Like the Altos they mostly pass: ${TW.one_minute} of the ${TW.meetings} were in range for a single minute, at a typical ${TW.rssi_med} dBm. ${TW.by_distance[3].n} of the meetings were 12 km or more from the yard.</p>
+  <p><b>The clock is shift change.</b> Per hour of field driving you met ${hr(9).tower_per_h} Tower cars at 9 am and ${hr(17).tower_per_h} at 5 pm, cars leaving and coming back, and ${Math.min(...mid)} to ${Math.max(...mid)} through the middle of the day. Alto runs the other way: ${hr(9).alto_per_h} an hour at 9, ${Math.max(...HR.map(x=>x.alto_per_h))} at its midday peak.</p>`);
+  const TA=[{key:'t',name:'Tower',tok:'--ink2'},{key:'a',name:'Alto',tok:'--t-ride'}];
+  const tw2=el('div','two');
+  tw2.append(chart('Cars met per hour of field driving, by time of day','Away from the yard and home',legendRow(TA)+svgLines(HR.map(x=>({k:x.hour+':00',t:x.tower_per_h,a:x.alto_per_h})),TA,{unit:' per hour',label:k=>k}),
+    'Each point divides the cars met in that hour of the day by the hours you spent driving in it, across '+TW.days+' days.'));
+  const hbx=el('div');hbx.append(table(['Where Tower cars cluster','Tower','Days','Alto'],TW.hubs.map(h=>[h.name,h.cars,h.days,h.alto_cars||'']),[1,2,3]));tw2.append(hbx);
+  sec.append(tw2);
+  P(sec,`<p><b>Where, per hour you spent there.</b> Raw counts mostly show where you drive, so the table divides by your own time in each area. Overall you met ${OV.tower_per_h} Tower cars and ${OV.alto_per_h} Altos per field hour.</p>`);
+  sec.append(table(['Area','Your hours there','Tower cars met','Tower per hour','Alto cars met','Alto per hour'],TW.areas.filter(a=>a.hours>=2.5).slice(0,18).map(a=>[a.area,a.hours.toFixed(1),a.tower,a.tower_per_h.toFixed(2),a.alto,a.alto_per_h.toFixed(2)]),[1,2,3,4,5]));
+  P(sec,`<p><b>The airport is where both fleets pile up:</b> ${lax.tower_per_h} Tower cars and ${lax.alto_per_h} Altos for every hour you spent around LAX, three to four times the overall rate for each. Lincoln Heights is high for Tower only because it is the road to the yard. Past those two the fleets part ways. Alto is thick through Hollywood, Beverly Hills, Palms, Culver City and Koreatown, at two to three cars an hour, where Tower cars are scarce. Tower cars turn up relatively more downtown, in the Arts District and in South LA. Across ${TW.area_n} areas the two rates only loosely track each other (correlation ${TW.area_corr}).</p>
+  <p><b>Do Tower cars coincide with Altos? About twice as often as chance.</b> At ${WA.tower_with_alto} of the ${WA.tower_n} Tower meetings an Alto was also met within 500 m and ten minutes (${WA.tower_pct}%). Take a random minute of your field driving on the same days and that happens ${WA.random_alto_pct}% of the time. From the Alto side: ${WA.alto_with_tower} of ${WA.alto_n} Alto meetings had a Tower car that close (${WA.alto_pct}%), against ${WA.random_tower_pct}% at random. Widened to 1 km and 15 minutes the lift is ${WB.lift_alto} to ${WB.lift_tower} times. It happened on ${TW.both_days} days.</p>`);
+  sec.append(table(['Date','Time','Where a Tower car and an Alto were met together','Altos within 500 m and 10 min'],TW.both_list.map(b=>[mono(b.day.slice(5)),b.time,b.where,b.altos]),[3]));
+  P(sec,`<p><b>Reading it as demand.</b> A place where you keep meeting both fleets while you are only passing through is a place two separate dispatch systems keep sending cars. LAX qualifies on every measure here, and Lincoln Boulevard through Santa Monica and Marina del Rey shows up in the table above more than once. Two cautions. The per-hour rates rest on 2 to 20 hours in each area, so a difference of half a car an hour is noise. And a meeting within a few kilometers of the yard at 9 or 5 is a colleague commuting, not a fare.</p>
+  <p><b>Running together, parked together.</b> ${TW.together.length} times another Tower car stayed in range while you covered 400 m or more, the longest on ${longDate(TW.together[0].day)} at ${TW.together[0].start}: ${TW.together[0].km} km along the ${TW.together[0].frm.split(',')[0]}. ${TW.parked.length} times one sat beside you for five minutes or more: ${TW.parked.slice().sort((x,y)=>(x.day+x.start).localeCompare(y.day+y.start)).map((p,i,arr)=>longDate(p.day)+' from '+p.start+' for '+p.mins+' minutes on '+p.where+((p.teslas_there>=20&&arr.findIndex(q=>q.day===p.day&&q.where===p.where)===i)?' ('+p.teslas_there+' Teslas were in range there that day, which reads as a charging site)':'')).join('; ')}.</p>
+  <p><b>Plates and plate sequences: not in this data.</b> Cars on TCP plates would seem easy to pick out, and over Bluetooth Low Energy they are not. A Tesla advertises an 18-character name built from a hash of its VIN, so two Tower cars' names look no more alike than any two Teslas', and consecutive plates or VINs leave no pattern in them. All ${fmt(TW.plate_search.names_checked)} distinct names in both logs were checked: ${TW.plate_search.plate_format===0?'none is':TW.plate_search.plate_format+' are'} in California plate format, and no vehicle carries "TCP". If the cars show a plate or unit number as their name when you pair a phone, that goes out over classic Bluetooth, which neither recorder scans.</p>
+  <p>So a Tower car is identified here by the yard, and that means the Mission Road cars only. <b>The La Cienega/Douglas cars are in the data but can't be told apart.</b> They are somewhere among the ${fmt(TW.all_teslas_field)} Teslas met in the field, ${TW.other_recurring.three_plus} of which are not Mission cars and were met on three or more days, which is what a working car looks like. Nowhere else in the logs do the same Teslas keep returning the way ${TW.second_yard.mission_repeat3} do at Mission Road; the next best spot has ${TW.second_yard.best_cell_repeat_teslas}. One slow pass by that yard with a recorder running would fingerprint its cars the same way, and they would then light up in every earlier log.</p>`);
+
+  // Lime
+  sec.append(el('h3','sh','Lime, and the other scooters'));
+  P(sec,`<p><b>${fmt(LM.scooters)} Lime scooters and e-bikes</b>, each counted by the vehicle number in its Bluetooth name, on ${LM.days} days. Three hardware generations are on the street: of the ${fmt(LM.with_address)} with a readable address, ${LM.hardware.slice(0,3).map(h=>fmt(h[1])+' use '+co(h[0]).replace(' Wireless Solutions','')+' radios').join(', ')}. Another ${fam('micro','Queclink').n} Bluetooth devices sit on Queclink tracker addresses, most named "ZK" plus a number: the tracker other shared-scooter and e-bike operators fit. They cluster around ${(W.queclink||[]).slice(0,2).map(x=>x.name).join(' and ')}. ${fam('micro','Bird').n} units answered to "Bird", and ${fam('micro','Ninebot').n+fam('micro','Segway').n} privately owned Ninebot and Segway scooters were heard.</p>`);
+  const t2=el('div','two');
+  const lc=el('div','card');lc.append(el('h4',null,'Where the Lime fleet was'),el('div','sub','scooters heard, by neighborhood'));barList(lc,LM.areas.slice(0,10).map(a=>({k:a.name,v:a.scooters,c:cssv('--t-micro')})));t2.append(lc);
+  t2.append(chart('Still where it was?','Lime scooters seen again: share within 100 m of the earlier spot',svgBars(LM.stay_by_gap.map(g=>({k:g.gap,v:g.stayed_pct})),{unit:'%',max:100,label:k=>k.replace(' days','d').replace('next day','next day')}),
+    LM.stay_by_gap.map(g=>g.gap+': '+g.pairs+' pairs').join(' \u00b7 ')));
+  sec.append(t2);
+  P(sec,`<p><b>They don't stay put.</b> ${fmt(LM.by_days.filter(d=>d.days>1).reduce((a,d)=>a+d.scooters,0))} Lime vehicles were heard on more than one day, giving ${fmt(LM.between_days.pairs)} pairs of sightings on different days. In only ${LM.between_days.stayed_100} of them was the scooter within 100 m of where it had been. ${fmt(LM.between_days.moved_300)} had moved 300 m or more: a median ${LM.between_days.median_km} km, a tenth of them more than ${LM.between_days.p90_km} km, the farthest ${LM.between_days.max_km} km. Seen again the next day, ${LM.stay_by_gap[0].stayed_pct}% were still in place; after four to seven days, ${LM.stay_by_gap[2].stayed_pct}%; after three weeks, none.</p>
+  <p><b>Ridden between two of your passes.</b> ${LM.same_day.moved_300} scooters were heard in two places 300 m or more apart on the same day, ${LM.same_day.moved_1km} of them a kilometer or more and one ${LM.same_day.max_km} km: someone rode it while you were elsewhere.</p>
+  <p><b>Keeping pace with you? Not that this data can show.</b> A parked scooter is in range for seconds: ${fmt(LM.heard_secs.once[0])} of ${fmt(LM.heard_secs.once[1])} sightings are a single scan and nine in ten last under ${Math.round(LM.heard_secs.p90)} seconds. ${LM.pacing.over_250} sightings stretched across 250 m or more of your path. Household Bluetooth gear, which doesn't ride anywhere, does that as often: ${LM.pacing.control_over_300} of ${fmt(LM.pacing.control_runs)} light strips and TVs were heard across 300 m, against ${LM.pacing.over_300} of ${fmt(LM.pacing.runs)} scooters. Long reach down a straight street explains them. The mobility in the Lime data is between sightings, not alongside you.</p>`);
+  sec.append(table(['The longest Lime sightings','Start','Heard for','Along your path','Your speed','Scans','Peak signal','Where it began'],LM.pacing.cases.map(c=>[mono(c.day),c.start,c.secs+' s',c.m+' m',c.kmh+' km/h',c.hears,c.rssi+' dBm',c.where]),[2,3,4,5,6]));
+  P(sec,`<p><b>How many are out there.</b> ${fmt(LM.by_days[0].scooters)} Lime vehicles were seen on one day and ${fmt(LM.by_days[1].scooters)} on two. By the same reasoning as for Alto, that points to roughly <b>${fmt(Math.round(LM.chao1/100)*100)} or more</b> in the districts you drive. Treat it loosely: scooters are retired and added over eleven weeks, and downtown was sampled far more often than anywhere else.</p>`);
+
+  // Uber, Lyft, taxis
+  sec.append(el('h3','sh','Uber, Lyft, taxis and limos'));
+  const rf=cat('ride').fams,tf=cat('taxi').fams;
+  P(sec,`<p><b>The lights are rare.</b> ${fam('ride','Uber Beacon').n} Uber Beacon windshield lights and ${fam('ride','Lyft Amp').n} Lyft Amp displays were heard over Bluetooth in eleven weeks, ${fam('ride','Uber Beacon').multi_day} of the Beacons on a second day. Most rideshare cars carry no light at all, so this counts lights, not drivers. ${fam('ride','Hotspots').n} more cars carried a hotspot with Uber or Lyft in its name. Most were met around ${W.ride.slice(0,3).map(x=>x.name).join(', ')}.</p>
+  <p><b>Taxis show up through their equipment.</b> ${fam('taxi','Bell Cab').n} Bell Cab cars broadcast a numbered "BellCab" network, ${fam('taxi','Bell Cab').multi_day} of them heard on more than one day, mostly around ${W.taxi.slice(0,2).map(x=>x.name).join(' and ')}: the airport and downtown. ${fam('taxi','Limo').n} hotspots carry a limousine company's name.</p>`);
+  sec.append(table(['','Devices','Heard on 2+ days','Seen 500 m+ apart','Travelled with you'],[...rf,...tf].map(f=>[f.fam,f.n,f.multi_day||'',f.movers||'',f.along||'']),[1,2,3,4]));
+
+  // buses
+  sec.append(el('h3','sh','Buses, coaches and rail'));
+  const lb=fam('bus','LABSP'),ld=fam('bus','LADOT'),mr=fam('bus','Metro Rail');
+  P(sec,`<p><b>LADOT's buses carry passenger Wi-Fi with the agency's name on it.</b> ${ld.n} of them were heard, ${ld.multi_day} on more than one day, thickest around ${W.ladot.slice(0,3).map(x=>x.name).join(', ')}: the DASH downtown loops and the Commuter Express stops. <b>Metro Rail</b> accounts for ${mr.n} radios named MetroRailFreeWiFi, ${mr.movers} of which moved, so those are trains; the rest are stations (${W.metro.slice(0,3).map(x=>x.name).join(', ')}). The FlyAway airport bus (${fam('bus','FlyAway').n}) turns up at ${W.flyaway[0].name}, and ${fam('bus','Tour').n} tour, charter and intercity coaches carry names such as Big Bus Tours, Starline, FlixBus and Greyhound.</p>
+  <p><b>Metro's own buses don't name themselves, but something on them probably does.</b> ${lb.n} radios on MikroTik hardware share the network name "LABSP". ${lb.movers} of them moved and ${lb.multi_day} were heard on more than one day, and they travelled with you more than anything else in this group: ${lb.along} of them kept pace for 800 m or more, ${(TR.along_repeat.find(x=>x.cat==='bus')||{devices:0}).devices} of those on more than one day. Los Angeles runs a bus signal-priority system in which buses ask traffic signals for a green over a wireless link at more than 600 intersections, and "LA BSP" fits it. That reading is an inference from the name and the behavior, not a confirmed identification. The ${lb.n-lb.movers} that never moved would be the intersection end.</p>`);
+  sec.append(table(['','Radios','Heard on 2+ days','Seen 500 m+ apart','Travelled with you'],cat('bus').fams.map(f=>[f.fam,f.n,f.multi_day||'',f.movers||'',f.along||'']),[1,2,3,4]));
+
+  // fleets & dashcams
+  sec.append(el('h3','sh','Commercial fleets and dashcams'));
+  const sm=fam('tele','Samsara');
+  P(sec,`<p><b>If it carries Samsara, it is almost certainly a work vehicle.</b> ${fmt(TR.samsara.wifi)} Wi-Fi gateways sit on Samsara's address block. ${TR.samsara.alto} are Alto's. The rest belong to other fleets, and many say whose: the gateway's network is named by whoever set it up (${TR.samsara.generic} keep a default name such as "Samsara"). Motive (formerly KeepTruckin), Netradyne's Driveri cameras and the truck logging devices are the same kind of signal: hardware nobody fits to a private car.</p>`);
+  const f2=el('div','two');
+  const fa=el('div');fa.append(table(['Fleet trackers and cameras','Devices','2+ days','Seen 500 m+ apart','Travelled with you'],cat('tele').fams.map(f=>[f.fam,fmt(f.n),f.multi_day||'',f.movers||'',f.along||'']),[1,2,3,4]));f2.append(fa);
+  const fb=el('div');fb.append(table(['Fleet name on a Samsara gateway','Gateways'],TR.fleets.slice(0,12).map(f=>[f.name,f.n]),[1]));f2.append(fb);
+  sec.append(f2);
+  P(sec,`<p><b>Dashcams can't be assigned to anyone.</b> ${fmt(cat('dash').n)} were heard, and a dashcam's Wi-Fi name gives the brand and nothing about the owner. ${fmt(cat('dash').movers)} were heard in places 500 m apart and ${cat('dash').along} travelled with you for a stretch, which is traffic. The brands are consumer ones (70mai, Type S, BlackVue, Rove), bought by private drivers and rideshare drivers alike; nothing in the signal separates a chauffeur's camera from a commuter's. The largest unbranded group, ${fam('dash','Dash-').n} units named "Dash-" and four digits, sits on a low-cost Wi-Fi module and behaves like the branded dashcams; its maker isn't identified.</p>`);
+  sec.append(table(['Dashcam brand','Devices','2+ days','Seen 500 m+ apart','Travelled with you'],cat('dash').fams.map(f=>[f.fam,fmt(f.n),f.multi_day||'',f.movers||'',f.along||'']),[1,2,3,4]));
+  const sh=cat('share').fams;
+  P(sec,`<p><b>Car share and named fleets.</b> ${fam('share','Envoy').n} Envoy shared electric cars, ${fam('share','Zipcar').n} Zipcars and ${fam('share','ClearSky').n} ClearSky fleet trackers were heard, plus ${fam('share','Fleet').n} networks with "Fleet" in the name. ${cat('robot').n} Kiwibot delivery robots were heard, all standing still. Coco robots can't be counted: ${TR.notfound.coco_names} networks are named "Coco" something, and most of them are homes.</p>`);
+
+  // travelled with you
+  sec.append(el('h3','sh','What travelled with you, and for how long'));
+  P(sec,`<p>${TR.along_sum.runs} times a named vehicle device stayed in range while you covered 800 m or more, ${TR.along_sum.devices} different devices in all. The typical case lasted ${TR.along_sum.med_min.toFixed(1)} minutes over ${TR.along_sum.med_km.toFixed(1)} km: the same lane of the same freeway. The only devices that rode with you for 20 minutes or more were your own Chevrolet's.</p>`);
+  sec.append(table(['Date','Start','What','Minutes','Distance','Avg speed','Peak signal','Along'],TR.along.slice(0,14).map(a=>[mono(a.day.slice(5)),a.start,a.fam.replace(/ \(.*\)$/,''),a.mins,a.km+' km',a.kmh+' km/h',a.rssi+' dBm',a.frm===a.to?a.frm:a.frm+' \u2192 '+a.to]),[3,4,5,6],[7]));
+  const AR=TR.along_repeat||[],ARD=TR.along_repeat_detail||[],arBus=AR.filter(x=>x.cat==='bus').reduce((a,x)=>a+x.devices,0);
+  if(ARD.length){
+    P(sec,`<p><b>Company on more than one day.</b> ${AR.reduce((a,x)=>a+x.devices,0)} of those devices did it on two or more different days. ${arBus} are "LABSP" radios, which is buses on the streets you repeat. The other ${ARD.length} are dashcams, and they are worth a look:</p>`);
+    const rowsD=[];ARD.forEach((d,i)=>d.runs.filter(r=>r.with_you).forEach((r,j)=>rowsD.push([j===0?'Dashcam '+String.fromCharCode(65+i)+' <span class="tag">'+d.days_seen+' days seen</span>':'',mono(r.day),r.start,r.mins,r.km+' km',r.rssi+' dBm',r.frm+' \u2192 '+r.to,r.depot_km+' km'])));
+    sec.append(table(['','Date','Start','Minutes with you','Distance','Peak signal','Along','Run ended this far from the depot'],rowsD,[3,4,5,7],[6]));
+    sec.append(el('div','note','<b>How to read these two.</b> Each kept pace with you on two separate days, for '+Math.min(...ARD.flatMap(d=>d.runs.filter(r=>r.with_you).map(r=>r.mins)))+' to '+Math.max(...ARD.flatMap(d=>d.runs.filter(r=>r.with_you).map(r=>r.mins)))+' minutes at a time, on freeways leading toward your depot or back across your working area. That is what another driver from the same depot, or a regular on the same commute, looks like. Neither was ever heard within '+Math.floor(Math.min(...ARD.map(d=>d.nearest_home_km)))+' km of your home, and neither comes near the threat search\'s test for a tail (ten minutes and 3 km together, on two days). They are listed because a device that keeps you company twice is the pattern worth knowing about.'));
+  }
+
+  // not found
+  sec.append(el('h3','sh','Looked for and not found'));
+  P(sec,`<p><b>Waymo, Zoox and other robotaxis.</b> No network or Bluetooth name contains Waymo, Zoox or Cruise, and no address is registered to any of them. That doesn't mean none drove past. A robotaxi has no reason to announce itself: its links are cellular, and anything it does broadcast would appear here as one more anonymous address. Telling them apart needs a signature confirmed by standing next to one, and this data has none.</p>
+  <p><b>8Fleet.</b> Nothing carries its name. 8Fleet puts employed drivers in company cars on the rideshare apps, so its cars would look like any other car here unless they carry a fleet tracker, and a tracker's default name doesn't say whose car it is. If you know what telematics its cars use, that name pattern can be searched.</p>
+  <p><b>Metro buses, Foothill Transit, Culver CityBus, Big Blue Bus.</b> No passenger Wi-Fi with those names, apart from ${fam('bus','Big Blue').n} Big Blue Bus radios. Either the buses don't offer 2.4 GHz Wi-Fi or it carries a name that doesn't identify the operator.</p>`);
+
+  // counted only
+  sec.append(el('h3','sh','Counted, not listed'));
+  const gv=cat('gov'),rt=cat('router');
+  P(sec,`<p><b>City and emergency vehicles:</b> ${gv.n} radios (${gv.fams.map(f=>f.fam+' '+f.n).join(', ')}), ${gv.movers} of them seen in more than one place. <b>Vehicle-grade cellular routers</b> (Cradlepoint, Peplink, Sierra Wireless, Inseego, Teltonika): ${fmt(rt.n)}, of which ${rt.movers} moved. Those routers ride in buses, ambulances, patrol cars, food trucks and plenty of fixed sites, and nothing in the signal says which, so they are totals only and are not on the map.</p>`);
+
+  // cars
+  sec.append(el('h3','sh','Cars that announce their make'));
+  const cc=el('div','two');
+  const c1=el('div','card');c1.append(el('h4',null,'In-car hotspots and keys, by make'),el('div','sub',fmt(cat('car').n)+' devices; one car can carry more than one'));
+  barList(c1,TR.cars.filter(c=>!/Other/.test(c.make)).slice(0,14).map(c=>({k:c.make,v:c.n,c:cssv('--ink3')})));cc.append(c1);
+  const c2=el('div','prose');c2.innerHTML=`<p>${fmt(cat('car').n)} devices name a carmaker: the Wi-Fi hotspot built into the dashboard, or a Bluetooth key or sensor. ${fmt(cat('car').along)} of them travelled with you for 800 m or more, the largest group by far of anything that did. Chevrolet leads by a wide margin.</p>
+  <p>Teslas are counted separately, by Bluetooth name: <b>${fmt(TR.tesla_names)}</b> distinct cars. ${fmt((TR.cars.find(c=>/Other/.test(c.make))||{n:0}).n)} more hotspots sit on automotive Wi-Fi modules without naming a make.</p>`;cc.append(c2);
+  sec.append(cc);
+  sec.append(el('div','note','<b>Outside sources.</b> 8Fleet\'s description of itself: <a href="https://www.eightfleet.com/drive" target="_blank" rel="noopener">eightfleet.com/drive</a>. The Los Angeles bus signal-priority system and its 600 intersections: <a href="https://www.masstransitmag.com/technology/miscellaneous/press-release/21266046/iteris-iteris-awarded-subcontract-to-operate-and-manage-vehicletoinfrastructure-countywide-signal-priority-system-for-la-metro" target="_blank" rel="noopener">Mass Transit, on Metro\'s Countywide Signal Priority contract</a>. Everything else on this tab comes from the logs.'));
+  sec.append(mapLink('See Tower, Alto, Lime, buses, fleets and dashcams on the map \u2192',['t_tower','t_alto','t_ride','t_bus']));
+  sec.append(footer());stage.append(sec);
+}
+
+function mapLink(txt,layers){const p=el('p');const a=el('a',null,txt);a.href='#map';if(layers)a.onclick=()=>{window.__PMON=layers;};a.style.cssText='font-family:var(--disp);font-weight:600;font-size:13px';p.style.marginTop='14px';p.append(a);return p;}
+function footer(){return el('footer',null,'Pisces Moon Signals Atlas \u00b7 version 6 \u00b7 built from 113 wardrive sessions, 83 recorded on the T-Deck Plus and 30 on the Cardputer, Mar\u2013Nov 2026 \u00b7 Wi-Fi and Bluetooth separated by type \u00b7 geography limited to California & Oregon \u00b7 personal names redacted for display'+(LOCAL?' \u00b7 street map \u00a9 OpenStreetMap contributors':'')+'. Device locations are strength-weighted estimates, not exact positions.');}
 
 /* ================= MAP ================= */
 function viewMap(){
   const sec=el('section');sec.style.paddingBottom='10px';
   sec.append(el('div','eyebrow','Interactive map \u00b7 California & Oregon'));
   sec.append(el('h2','vh','The signals map'));
-  sec.append(el('p','lead',LOCAL?'Toggle layers on the left and pick a base map. Click a Wi-Fi or Bluetooth dot to pull its full record. Streets are OpenStreetMap tiles, so this copy needs an internet connection for the base map; your own layers work offline.'
-    :'Toggle layers on the left. Click a Wi-Fi or Bluetooth dot to pull its full record. This published copy draws only county outlines under your own data; the copy on your Mac adds OpenStreetMap streets.'));
+  sec.append(el('p','lead',LOCAL?'Toggle layers on the left and pick a base map. Click a Wi-Fi or Bluetooth dot to pull its full record, or a transit mark to see every place that unit was met. Streets are OpenStreetMap tiles, so this copy needs an internet connection for the base map; your own layers work offline.'
+    :'Toggle layers on the left. Click a Wi-Fi or Bluetooth dot to pull its full record, or a transit mark to see every place that unit was met. This published copy draws only county outlines under your own data; the copy on your Mac adds OpenStreetMap streets.'));
   const wrap=el('div');wrap.id='mapwrap';
   wrap.innerHTML=`<div id="map"></div>
     <div class="maptools"><details class="layerbox" open><summary>Layers</summary><div class="lyrs" id="lyrs"></div></details></div>
@@ -1522,9 +1850,23 @@ async function initMap(){
     R.reps.filter(r=>r.road).forEach(r=>cm(r.lat,r.lon,cssv('--rep4'),4,`<b>${r.road}</b>${r.hood?'<br>'+r.hood:''}<br>Driven on ${r.days} separate days`).addTo(roads));}
   buildMarkers();
 
-  const L_={tracks:true,repeat:true,corridor:true,roads:false,regions:false,density:false,wifi:false,ble:false,stops:false,espall:false,esp:false,anom:false};
+  const L_={tracks:true,repeat:true,corridor:true,roads:false,regions:false,density:false,wifi:false,ble:false,stops:false,espall:false,esp:false,anom:false,t_tower:false,t_alto:false,t_ride:false,t_micro:false,t_bus:false,t_fleet:false,t_dash:false};
+  /* transit layers: three validated hues plus neutral; shape carries the rest of the identity */
+  const TL=[['t_tower','Other Tower cars, in the field','star','--ink',['tower']],['t_alto','Alto cars','diamond','--t-ride',['alto']],['t_ride','Uber, Lyft, taxis and limos','tri','--t-ride',['ride','taxi']],['t_micro','Lime and other scooters','dot','--t-micro',['micro']],
+    ['t_bus','Buses, coaches and rail','square','--t-bus',['bus']],['t_fleet','Fleet trackers and car share','plus','--ink2',['tele','share','robot']],['t_dash','Dashcams','ring','--ink2',['dash']]];
+  let TM=null,SEL=null;const hubsL=L.layerGroup();
+  function buildHubs(){hubsL.clearLayers();if(!TM)return;(TM.hubs||[]).forEach(h=>L.circleMarker([h.lat,h.lon],{radius:8+h.cars,color:cssv('--t-ride'),weight:2,fill:true,fillOpacity:0,dashArray:'4 3'}).bindPopup(`<b>${h.name}</b><br>${h.cars} different Alto cars met here, on ${h.days} day${h.days===1?'':'s'}`).addTo(hubsL));}
+  async function needTM(){if(TM)return;const t=await J('transit_map.json');t.ci=Object.fromEntries(t.cats.map((c,i)=>[c[0],i]));TM=t;buildHubs();}
+  function glyph(shape,x,y,r){ctx.beginPath();
+    if(shape==='diamond'){ctx.moveTo(x,y-r*1.25);ctx.lineTo(x+r*1.25,y);ctx.lineTo(x,y+r*1.25);ctx.lineTo(x-r*1.25,y);ctx.closePath();}
+    else if(shape==='star'){for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,q=(i%2?0.62:1.45)*r;if(i===0)ctx.moveTo(x+q*Math.cos(a),y+q*Math.sin(a));else ctx.lineTo(x+q*Math.cos(a),y+q*Math.sin(a));}ctx.closePath();}
+    else if(shape==='tri'){ctx.moveTo(x,y-r*1.2);ctx.lineTo(x+r*1.15,y+r*.9);ctx.lineTo(x-r*1.15,y+r*.9);ctx.closePath();}
+    else if(shape==='square'){ctx.rect(x-r*.9,y-r*.9,r*1.8,r*1.8);}
+    else if(shape==='plus'){const a=r*.4;ctx.rect(x-r*1.1,y-a,r*2.2,2*a);ctx.rect(x-a,y-r*1.1,2*a,r*2.2);}
+    else ctx.arc(x,y,r,0,6.283);}
   const markerLayers={stops,esp:espC,anom,regions,roads};
   function syncMarkers(){for(const k in markerLayers){if(L_[k])markerLayers[k].addTo(map);else map.removeLayer(markerLayers[k]);}
+    if(L_.t_alto&&TM)hubsL.addTo(map);else map.removeLayer(hubsL);
     if(basemap==='none')lblLayer.addTo(map);else map.removeLayer(lblLayer);}
   const defs=[['tracks','Driven routes','line','--track'],['repeat','Repeat roads (by days)','dot','--rep3'],['corridor','I-10 commute corridor','line','--corr'],
     ['roads','Frequented roads (named)','dot','--rep4'],['regions','High-RF regions','dot','--wifi-sec'],['density','Signal density','sw','--heat3'],
@@ -1538,7 +1880,14 @@ async function initMap(){
     cb.onchange=()=>{L_[k]=cb.checked;if(markerLayers[k])syncMarkers();draw();legend();};
     const sw=el('span','sw '+(shape==='line'?'line':shape==='dot'?'dot':''));sw.style.background=cssv(tok);swatches.push([sw,tok]);
     row.append(cb,sw,el('span',null,label));lyrs.append(row);});
+  lyrs.append(el('div','lyrhead','Transit and fleets'));
+  const GL={star:'<path d="M6 .6 7.5 4.3 11.5 4.6 8.4 7.2 9.4 11.1 6 9 2.6 11.1 3.6 7.2 .5 4.6 4.5 4.3Z" fill="currentColor"/>',diamond:'<path d="M6 1 11 6 6 11 1 6Z" fill="currentColor"/>',dot:'<circle cx="6" cy="6" r="3.2" fill="currentColor"/>',tri:'<path d="M6 1.5 11 10.5H1Z" fill="currentColor"/>',square:'<rect x="2" y="2" width="8" height="8" fill="currentColor"/>',plus:'<path d="M4.6 1h2.8v3.6H11v2.8H7.4V11H4.6V7.4H1V4.6h3.6Z" fill="currentColor"/>',ring:'<circle cx="6" cy="6" r="3.8" fill="none" stroke="currentColor" stroke-width="1.8"/>'};
+  const gsw=[];
+  TL.forEach(([k,label,shape,tok])=>{const row=el('label','lyr');const cb=el('input');cb.type='checkbox';cb.checked=false;cb.id='lyr-'+k;
+    cb.onchange=async()=>{L_[k]=cb.checked;if(cb.checked)await needTM();if(!TL.some(t=>L_[t[0]]))SEL=null;syncMarkers();draw();};
+    const sw=el('span','sw gl','<svg viewBox="0 0 12 12" aria-hidden="true">'+GL[shape]+'</svg>');sw.style.color=cssv(tok);gsw.push([sw,tok]);row.append(cb,sw,el('span',null,label));lyrs.append(row);});
   syncMarkers();
+  const pre=window.__PMON||[];window.__PMON=null;pre.forEach(k=>{const cb=$('#lyr-'+k);if(cb&&!cb.checked){cb.checked=true;cb.onchange();}});
 
   function legend(){const box=$('#legend');box.innerHTML='';
     const add=(c,t,sh='dot')=>{const r=el('div','row');const s=el('span','sw '+(sh==='line'?'line':sh==='dot'?'dot':''));s.style.background=c;r.append(s,el('span',null,t));box.append(r);};
@@ -1577,8 +1926,15 @@ async function initMap(){
     if(L_.wifi){const wc=[cssv('--wifi-sec'),cssv('--wifi-open'),cssv('--wifi-hidden'),cssv('--wifi-unk')];drawPts(WP,i=>wc[WA[i*3+1]]||wc[0]);}
     if(L_.ble){const bc=cssv('--ble');drawPts(BP,()=>bc);}
     if(L_.espall){const fx=cssv('--wifi-hidden'),mv=cssv('--crit'),rr=z>=13?3:2.2;esp.points.forEach(p=>{if(p[0]<south||p[0]>north||p[1]<west||p[1]>east)return;const q=toPt(p[0],p[1]);ctx.fillStyle=p[2]?mv:fx;ctx.beginPath();ctx.arc(q.x,q.y,rr,0,6.283);ctx.fill();});}
+    if(TM){const zr=z>=14?5:z>=12?4:z>=10?3:2.2,halo=cssv('--panel'),ink=cssv('--ink');
+      TL.forEach(([k,,shape,tok,cats])=>{if(!L_[k])return;const col=cssv(tok),ci=new Set(cats.map(c=>TM.ci[c])),rr=shape==='dot'?zr*.62:shape==='ring'?zr*.8:zr;
+        ctx.fillStyle=col;ctx.strokeStyle=shape==='ring'?col:halo;ctx.lineWidth=shape==='ring'?1.6:1;
+        TM.pts.forEach(p=>{if(!ci.has(p[0])||p[1]<south||p[1]>north||p[2]<west||p[2]>east)return;const q=toPt(p[1],p[2]);glyph(shape,q.x,q.y,rr);if(shape==='ring')ctx.stroke();else{ctx.fill();if(z>=12)ctx.stroke();}});});
+      if(SEL){const pts=TM.pts.filter(p=>p[0]===SEL.c&&p[3]===SEL.f&&p[4]===SEL.tag).sort((a,b)=>a[5]-b[5]);ctx.strokeStyle=ink;
+        if(pts.length>1){ctx.lineWidth=1.5;ctx.setLineDash([5,4]);ctx.beginPath();pts.forEach((p,i)=>{const q=toPt(p[1],p[2]);if(i===0)ctx.moveTo(q.x,q.y);else ctx.lineTo(q.x,q.y);});ctx.stroke();ctx.setLineDash([]);}
+        ctx.lineWidth=2;pts.forEach(p=>{const q=toPt(p[1],p[2]);ctx.beginPath();ctx.arc(q.x,q.y,zr+4,0,6.283);ctx.stroke();});}}
   }
-  window.MAP.restyle=()=>{if(LOCAL)setBase(basemap);else{outlines();draw();}buildMarkers();syncMarkers();swatches.forEach(([sw,tok])=>sw.style.background=cssv(tok));legend();};
+  window.MAP.restyle=()=>{if(LOCAL)setBase(basemap);else{outlines();draw();}buildMarkers();buildHubs();syncMarkers();swatches.forEach(([sw,tok])=>sw.style.background=cssv(tok));gsw.forEach(([sw,tok])=>sw.style.color=cssv(tok));legend();};
   map.on('move zoom',()=>{L.DomUtil.setPosition(cv,map.containerPointToLayerPoint([0,0]));draw();});
   map.on('zoomstart',()=>{cv.style.opacity=.25;});map.on('zoomend',()=>{cv.style.opacity=1;size();draw();});
   map.on('resize',()=>{size();draw();});
@@ -1589,7 +1945,13 @@ async function initMap(){
     const scan=(P,kind,prefix)=>{for(let i=0;i<P.length;i+=2){const p=map.latLngToContainerPoint([P[i]/1e5,P[i+1]/1e5]);
       const d=Math.abs(p.x-pt.x)+Math.abs(p.y-pt.y);if(d<bd){bd=d;best={kind,idx:(i/2)|0,prefix};}}};
     if(L_.wifi)scan(WP,'Wi-Fi','wifi');if(L_.ble)scan(BP,'Bluetooth','ble');
-    if(!best){$('#detail').classList.remove('on');return;}
+    if(TM)TL.forEach(([k,,,,cats])=>{if(!L_[k])return;const ci=new Set(cats.map(c=>TM.ci[c]));TM.pts.forEach((p,i)=>{if(!ci.has(p[0]))return;const q=map.latLngToContainerPoint([p[1],p[2]]);const d=Math.abs(q.x-pt.x)+Math.abs(q.y-pt.y);if(d<=bd){bd=d;best={kind:'transit',idx:i};}});});
+    if(!best){$('#detail').classList.remove('on');if(SEL){SEL=null;draw();}return;}
+    if(best.kind==='transit'){const p=TM.pts[best.idx],all=TM.pts.filter(x=>x[0]===p[0]&&x[3]===p[3]&&x[4]===p[4]).sort((a,b)=>a[5]-b[5]);
+      SEL={c:p[0],f:p[3],tag:p[4]};draw();
+      $('#detbody').innerHTML=`<h5>${TM.fams[p[3]]}</h5><dl><dt>Group</dt><dd>${TM.cats[p[0]][1]}</dd><dt>Unit</dt><dd>${p[4]}</dd><dt>This sighting</dt><dd>${TM.days[p[5]]}</dd><dt>Peak signal</dt><dd>${p[6]} dBm</dd><dt>Days met</dt><dd>${all.length}</dd>${all.length>1?'<dt>All days</dt><dd>'+all.map(x=>TM.days[x[5]].slice(5)).join(', ')+'</dd>':''}</dl><p style="font-size:11px;color:var(--ink3);margin:8px 0 0">${all.length>1?'The dashed line joins every place this unit was met, in date order. ':''}The position is where you were when its signal peaked that day.</p>`;
+      $('#detail').classList.add('on');return;}
+    if(SEL){SEL=null;draw();}
     const chunk=await J(best.prefix+'_d'+String(Math.floor(best.idx/CH)).padStart(3,'0')+'.json');
     const row=chunk[best.idx%CH];if(!row)return;
     const [nm,mac,vendor,first,last,days,rssi,sight,kindcol,spread]=row;
