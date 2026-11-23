@@ -1,0 +1,1 @@
+window.__PMD=window.__PMD||{};window.__PMB=window.__PMB||{};window.__PMD["data/pdx/stops.json"]=[{"lat":45.54,"lon":-122.864,"days":1,"visits":1,"mins":38,"anchor":null},{"lat":45.428,"lon":-122.748,"days":2,"visits":3,"mins":19,"anchor":null},{"lat":45.42,"lon":-122.744,"days":1,"visits":1,"mins":5,"anchor":null}];window.__PMB["data/pdx/stops.json"]="p1.c5e000e6";
